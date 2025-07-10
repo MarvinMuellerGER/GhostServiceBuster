@@ -34,16 +34,6 @@ public static class FilterHandlerTests
     public sealed class ApplyFilters
     {
         [Fact]
-        public void WithNullFilters_ReturnsOriginalSet()
-        {
-            // Act
-            var result = FilterHandler.ApplyFilters(ServiceInfoSet, null);
-
-            // Assert
-            result.Should().BeEquivalentTo(ServiceInfoSet);
-        }
-
-        [Fact]
         public void WithEmptyFiltersList_ReturnsOriginalSet()
         {
             // Arrange
@@ -116,7 +106,7 @@ public static class FilterHandlerTests
             var filters = new ServiceInfoFilterInfoList
             (
                 new ServiceInfoFilterInfo(Service1Filter, true),
-                new ServiceInfoFilterInfo(Service2Filter, true)
+                new ServiceInfoFilterInfo(Service3Filter, true)
             );
 
             // Act
@@ -126,7 +116,7 @@ public static class FilterHandlerTests
             // Both Service1 and Service2 should be included as per the SelectMany implementation
             result.Should().HaveCount(2);
             result.Should().Contain(ServiceInfo1);
-            result.Should().Contain(ServiceInfo2);
+            result.Should().Contain(ServiceInfo3);
         }
 
         [Fact]
@@ -147,45 +137,6 @@ public static class FilterHandlerTests
             result.Should().HaveCount(3);
             result.Should().Contain(ServiceInfo1);
             result.Should().Contain(ServiceInfo2);
-            result.Should().Contain(ServiceInfo3);
-        }
-
-        [Fact]
-        public void WithOneTimeFilter_AppliesItWithOtherFilters()
-        {
-            // Arrange
-            var filters = new ServiceInfoFilterInfoList
-            (
-                new ServiceInfoFilterInfo(Service1Or2Filter)
-            );
-            var oneTimeFilterInfo = new ServiceInfoFilterInfo(Service3Filter);
-
-            // Act
-            var result = FilterHandler.ApplyFilters(ServiceInfoSet, filters, oneTimeFilterInfo);
-
-            // Assert
-            // Since the one-time filter is applied after the regular filter and both are non-individual,
-            // the result should be empty (Service3 isn't in the result of the first filter)
-            result.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void WithIndividualOneTimeFilter_IncludesItsResultsWithOtherFilters()
-        {
-            // Arrange
-            var filters = new ServiceInfoFilterInfoList
-            (
-                new ServiceInfoFilterInfo(Service1Filter)
-            );
-            var oneTimeFilterInfo = new ServiceInfoFilterInfo(Service3Filter, true);
-
-            // Act
-            var result = FilterHandler.ApplyFilters(ServiceInfoSet, filters, oneTimeFilterInfo);
-
-            // Assert
-            // Should include Service1 from non-individual filter and Service3 from individual one-time filter
-            result.Should().HaveCount(2);
-            result.Should().Contain(ServiceInfo1);
             result.Should().Contain(ServiceInfo3);
         }
     }

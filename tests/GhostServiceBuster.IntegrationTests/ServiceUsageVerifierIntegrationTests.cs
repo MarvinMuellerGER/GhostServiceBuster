@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using FluentAssertions;
+using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Core;
 using GhostServiceBuster.Filter;
@@ -12,7 +13,8 @@ public static class ServiceUsageVerifierIntegrationTests
     private static readonly ServiceUsageVerifier ServiceUsageVerifier = new(
         new CoreServiceUsageVerifier(),
         new ServiceInfoExtractorHandler(),
-        new FilterHandler());
+        new FilterHandler(),
+        new FilterCacheHandler(new FilterHandler()));
 
     static ServiceUsageVerifierIntegrationTests() =>
         ServiceUsageVerifier.RegisterServiceInfoExtractor<List<Type>>(types =>
@@ -42,7 +44,7 @@ public static class ServiceUsageVerifierIntegrationTests
             );
 
             // Act
-            var unusedServices = ServiceUsageVerifier.GetUnusedServices(
+            var unusedServices = ServiceUsageVerifier.GetIndividualUnusedServices(
                 allServices,
                 rootServices,
                 allServicesFilters);
@@ -67,7 +69,7 @@ public static class ServiceUsageVerifierIntegrationTests
             var rootServices = new List<Type> { rootService };
 
             // Act
-            var unusedServices = ServiceUsageVerifier.GetUnusedServices(
+            var unusedServices = ServiceUsageVerifier.GetIndividualUnusedServices(
                 allServices,
                 rootServices);
 

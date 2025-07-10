@@ -4,8 +4,5 @@ namespace GhostServiceBuster.Filter;
 
 internal interface IFilterHandler
 {
-    ServiceInfoSet ApplyFilters(
-        ServiceInfoSet serviceInfo,
-        ServiceInfoFilterInfoList? filters,
-        ServiceInfoFilterInfo? oneTimeFilter = null);
+    ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList filters);
 }

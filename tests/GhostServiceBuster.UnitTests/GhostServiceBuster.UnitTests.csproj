@@ -35,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Cache\" />
         <Folder Include="Core\"/>
         <Folder Include="Filter\"/>
         <Folder Include="ServiceInfoExtractor\"/>

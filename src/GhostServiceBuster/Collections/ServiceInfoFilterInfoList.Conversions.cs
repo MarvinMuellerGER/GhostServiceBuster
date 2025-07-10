@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster.Collections;
@@ -22,4 +23,6 @@ partial class ServiceInfoFilterInfoList
 
     public static implicit operator ServiceInfoFilterInfoList(ServiceInfoFilterInfo? filterInfo) =>
         filterInfo is null ? [] : [filterInfo];
+
+    public static implicit operator ServiceInfoFilterInfoList(ImmutableList<ServiceInfoFilterInfo> list) => new(list);
 }
