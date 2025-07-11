@@ -4,12 +4,10 @@ namespace GhostServiceBuster.Core;
 
 internal sealed class CoreServiceUsageVerifier : ICoreServiceUsageVerifier
 {
-    public ServiceInfoSet GetUnusedServices(
-        in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
+    public ServiceInfoSet GetUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
     {
         var injectedServices = rootServices;
-        var unusedServices = allServices
-            .Except(injectedServices);
+        var unusedServices = allServices.Except(injectedServices);
 
         while (true)
         {

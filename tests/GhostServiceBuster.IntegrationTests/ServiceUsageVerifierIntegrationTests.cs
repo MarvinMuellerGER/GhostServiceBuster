@@ -1,24 +1,14 @@
 using System.Collections.Immutable;
 using FluentAssertions;
-using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Core;
 using GhostServiceBuster.Filter;
-using GhostServiceBuster.ServiceInfoExtractor;
 
 namespace GhostServiceBuster.IntegrationTests;
 
 public static class ServiceUsageVerifierIntegrationTests
 {
-    private static readonly IFilterHandler FilterHandler = new FilterHandler();
-
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = new ServiceUsageVerifier(
-        new CoreServiceUsageVerifier(),
-        new ServiceInfoExtractorHandler(),
-        FilterHandler,
-        new FilterCacheHandler(FilterHandler),
-        new FilterCacheHandler(FilterHandler),
-        new FilterCacheHandler(FilterHandler));
+    private static readonly IServiceUsageVerifier ServiceUsageVerifier = IServiceUsageVerifier.New;
 
     static ServiceUsageVerifierIntegrationTests() =>
         ServiceUsageVerifier.RegisterServiceInfoExtractor<List<Type>>(types =>

@@ -4,9 +4,12 @@ namespace GhostServiceBuster;
 
 public interface IServiceUsageVerifier : IImmutableServiceUsageVerifier
 {
+    static IServiceUsageVerifier New => Composition.Instance.ServiceUsageVerifier;
+
     IImmutableServiceUsageVerifier AsImmutable() => this;
 
-    IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
+    IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+        ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;
 
     IServiceUsageVerifier RegisterFilters(

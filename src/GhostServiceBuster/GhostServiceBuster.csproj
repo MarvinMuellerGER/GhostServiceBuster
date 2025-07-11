@@ -11,4 +11,11 @@
         <InternalsVisibleTo Include="$(MSBuildProjectName).IntegrationTests"/>
         <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Pure.DI" Version="2.1.72">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
 </Project>
