@@ -4,5 +4,5 @@ namespace GhostServiceBuster.Extract;
 
 public interface IServiceInfoExtractor<in TServiceCollection>
 {
-    public ServiceInfoSet ExtractServiceInfos(TServiceCollection serviceCollection);
+    ServiceInfoSet ExtractServiceInfos(TServiceCollection serviceCollection);
 }
