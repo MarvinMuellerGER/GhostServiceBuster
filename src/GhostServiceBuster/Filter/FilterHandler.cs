@@ -20,8 +20,7 @@ internal sealed class FilterHandler : IFilterHandler
                 .Aggregate(serviceInfo, (current, filter) => filter.Filter.Invoke(current));
 
     private static ServiceInfoSet ApplyIndividualFilters(
-        ServiceInfoSet serviceInfo, IEnumerable<ServiceInfoFilterInfo> filters)
-        => filters
-            .Where(filter => filter.IsIndividual)
-            .SelectMany(filter => filter.Filter.Invoke(serviceInfo)).ToImmutableHashSet();
+        ServiceInfoSet serviceInfo, IEnumerable<ServiceInfoFilterInfo> filters) =>
+        filters.Where(filter => filter.IsIndividual).SelectMany(filter => filter.Filter.Invoke(serviceInfo))
+            .ToImmutableHashSet();
 }

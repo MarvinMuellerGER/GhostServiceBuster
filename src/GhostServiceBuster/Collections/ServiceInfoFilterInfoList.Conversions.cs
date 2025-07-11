@@ -5,12 +5,11 @@ namespace GhostServiceBuster.Collections;
 
 partial class ServiceInfoFilterInfoList
 {
-    public static implicit operator ServiceInfoFilterInfoList((ServiceInfoFilter Filter, bool IsIndividual)? tuple)
-        => tuple is null ? [] : [tuple];
+    public static implicit operator ServiceInfoFilterInfoList((ServiceInfoFilter Filter, bool IsIndividual)? tuple) =>
+        tuple is null ? [] : [tuple];
 
     public static implicit operator ServiceInfoFilterInfoList(
-        (SingleServiceInfoFilter Filter, bool IsIndividual)? tuple)
-        => tuple is null ? [] : [tuple];
+        (SingleServiceInfoFilter Filter, bool IsIndividual)? tuple) => tuple is null ? [] : [tuple];
 
     public static implicit operator ServiceInfoFilterInfoList(ServiceInfoFilter? filter) =>
         filter is null ? [] : [filter];

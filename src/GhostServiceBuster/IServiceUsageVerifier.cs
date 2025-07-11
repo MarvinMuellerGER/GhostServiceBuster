@@ -22,14 +22,14 @@ public interface IServiceUsageVerifier : IImmutableServiceUsageVerifier
         ServiceInfoFilterInfoList? rootServicesFilters = null,
         ServiceInfoFilterInfoList? unusedServicesFilters = null);
 
-    IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilterInfoList allServicesFilters)
-        => RegisterFilters(allServicesFilters);
+    IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilterInfoList allServicesFilters) =>
+        RegisterFilters(allServicesFilters);
 
-    IServiceUsageVerifier RegisterRootServicesFilters(ServiceInfoFilterInfoList rootServicesFilters)
-        => RegisterFilters(rootServicesFilters: rootServicesFilters);
+    IServiceUsageVerifier RegisterRootServicesFilters(ServiceInfoFilterInfoList rootServicesFilters) =>
+        RegisterFilters(rootServicesFilters: rootServicesFilters);
 
-    IServiceUsageVerifier RegisterUnusedServicesFilters(ServiceInfoFilterInfoList unusedServicesFilters)
-        => RegisterFilters(unusedServicesFilters: unusedServicesFilters);
+    IServiceUsageVerifier RegisterUnusedServicesFilters(ServiceInfoFilterInfoList unusedServicesFilters) =>
+        RegisterFilters(unusedServicesFilters: unusedServicesFilters);
 }
 
 public interface IImmutableServiceUsageVerifier
