@@ -13,7 +13,8 @@ internal sealed partial class Composition
     internal static Composition Instance { get; } = new();
 
     [Conditional("DI")]
-    private void Setup() => DI.Setup()
+    // ReSharper disable once UnusedMember.Local
+    private static void Setup() => DI.Setup().Hint(Hint.Resolve, "OFF")
         .RootBind<IServiceUsageVerifier>(nameof(ServiceUsageVerifier)).To<ServiceUsageVerifier>()
         .Bind<ICoreServiceUsageVerifier>().As(Singleton).To<CoreServiceUsageVerifier>()
         .Bind<IServiceInfoExtractorHandler>().As(PerResolve).To<ServiceInfoExtractorHandler>()
