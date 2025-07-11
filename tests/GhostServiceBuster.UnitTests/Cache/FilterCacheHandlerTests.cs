@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 using GhostServiceBuster.Filter;
 using NSubstitute;
 

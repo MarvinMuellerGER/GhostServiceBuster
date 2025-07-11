@@ -1,8 +1,8 @@
 using GhostServiceBuster.Collections;
 
-namespace GhostServiceBuster.Core;
+namespace GhostServiceBuster.Detect;
 
-internal interface ICoreServiceUsageVerifier
+internal interface IUnusedServiceDetector
 {
     /// <summary>
     ///     Identifies services that are not used in the dependency chain of the root services.

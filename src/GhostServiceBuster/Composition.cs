@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using GhostServiceBuster.Cache;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
+using GhostServiceBuster.Extract;
 using GhostServiceBuster.Filter;
-using GhostServiceBuster.ServiceInfoExtractor;
 using Pure.DI;
 using static Pure.DI.Lifetime;
 
@@ -16,7 +16,7 @@ internal sealed partial class Composition
     // ReSharper disable once UnusedMember.Local
     private static void Setup() => DI.Setup().Hint(Hint.Resolve, "OFF")
         .RootBind<IServiceUsageVerifier>(nameof(ServiceUsageVerifier)).To<ServiceUsageVerifier>()
-        .Bind<ICoreServiceUsageVerifier>().As(Singleton).To<CoreServiceUsageVerifier>()
+        .Bind<IUnusedServiceDetector>().As(Singleton).To<UnusedServiceDetector>()
         .Bind<IServiceInfoExtractorHandler>().As(PerResolve).To<ServiceInfoExtractorHandler>()
         .Bind<IFilterHandler>().As(Singleton).To<FilterHandler>()
         .Bind<IFilterCacheHandler>().To<FilterCacheHandler>();

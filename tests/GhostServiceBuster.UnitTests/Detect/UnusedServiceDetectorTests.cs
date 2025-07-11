@@ -2,17 +2,17 @@
 
 using FluentAssertions;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 
-namespace GhostServiceBuster.UnitTests.Core;
+namespace GhostServiceBuster.UnitTests.Detect;
 
-public class CoreServiceUsageVerifierTests
+public class UnusedServiceDetectorTests
 {
     [Fact]
     public void FindUnusedServices_WhenNoRootServices_ReturnsAllServices()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(IService1), typeof(Service1Impl));
         var service2 = new ServiceInfo(typeof(IService2), typeof(Service2Impl));
@@ -31,7 +31,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WhenAllServicesAreRoots_ReturnsEmptySet()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(IService1), typeof(Service1Impl));
         var service2 = new ServiceInfo(typeof(IService2), typeof(Service2Impl));
@@ -50,7 +50,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WhenDirectDependency_FindsUsedServices()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(IService1), typeof(Service1Impl));
         var service2 = new ServiceInfo(typeof(IService2), typeof(Service2WithDependencyImpl));
@@ -71,7 +71,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WithTransitiveDependencies_FindsAllUsedServices()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(IService1), typeof(Service1Impl));
         var service2 = new ServiceInfo(typeof(IService2), typeof(Service2WithDependencyImpl)); // Depends on Service1
@@ -93,7 +93,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WithCyclicDependencies_HandlesThemCorrectly()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(ICyclicService1), typeof(CyclicService1Impl)); // Depends on Service2
         var service2 = new ServiceInfo(typeof(ICyclicService2), typeof(CyclicService2Impl)); // Depends on Service1
@@ -114,7 +114,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WithMultipleRoots_FindsAllUsedServices()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var service1 = new ServiceInfo(typeof(IService1), typeof(Service1Impl));
         var service2 = new ServiceInfo(typeof(IService2), typeof(Service2WithDependencyImpl)); // Depends on Service1
@@ -138,7 +138,7 @@ public class CoreServiceUsageVerifierTests
     public void FindUnusedServices_WithGenericParameters_HandlesThemCorrectly()
     {
         // Arrange
-        var verifier = new CoreServiceUsageVerifier();
+        var verifier = new UnusedServiceDetector();
 
         var genericService = new ServiceInfo(typeof(IGenericService<>), typeof(GenericServiceImpl<>));
         var genericConsumer = new ServiceInfo(typeof(IGenericConsumer),

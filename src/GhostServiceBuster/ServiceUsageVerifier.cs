@@ -1,13 +1,13 @@
 using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
+using GhostServiceBuster.Extract;
 using GhostServiceBuster.Filter;
-using GhostServiceBuster.ServiceInfoExtractor;
 
 namespace GhostServiceBuster;
 
 internal sealed class ServiceUsageVerifier(
-    ICoreServiceUsageVerifier coreServiceUsageVerifier,
+    IUnusedServiceDetector unusedServiceDetector,
     IServiceInfoExtractorHandler serviceInfoExtractorHandler,
     IFilterHandler filterHandler,
     IFilterCacheHandler allServicesFilterCacheHandler,
@@ -51,16 +51,21 @@ internal sealed class ServiceUsageVerifier(
         var extractedAllServices = serviceInfoExtractorHandler.GetServiceInfo(allServices);
         var extractedRootServices = serviceInfoExtractorHandler.GetServiceInfo(rootServices);
 
-        var filteredAllServices = allServicesFilterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
-        var filteredRootServices = rootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
+        var filteredAllServices =
+            allServicesFilterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
+        var filteredRootServices =
+            rootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
 
-        var unusedServicesUnfiltered = coreServiceUsageVerifier.FindUnusedServices(filteredAllServices, filteredRootServices);
-        unusedServices = unusedServicesFilterCacheHandler.ApplyFilters(unusedServicesUnfiltered, oneTimeUnusedServicesFilters);
+        var unusedServicesUnfiltered =
+            unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
+        unusedServices =
+            unusedServicesFilterCacheHandler.ApplyFilters(unusedServicesUnfiltered, oneTimeUnusedServicesFilters);
 
         return this;
     }
 
-    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeFilters<TAllServicesCollection, TRootServicesCollection>(
+    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeFilters<TAllServicesCollection,
+        TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         out ServiceInfoSet unusedServices,
@@ -75,8 +80,9 @@ internal sealed class ServiceUsageVerifier(
 
         var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters ?? []);
         var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters ?? []);
-        
-        var unusedServicesUnfiltered = coreServiceUsageVerifier.FindUnusedServices(filteredAllServices, filteredRootServices);
+
+        var unusedServicesUnfiltered =
+            unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
         unusedServices = filterHandler.ApplyFilters(unusedServicesUnfiltered, unusedServicesFilters ?? []);
 
         return this;

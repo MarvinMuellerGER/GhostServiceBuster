@@ -1,6 +1,6 @@
 using GhostServiceBuster.Collections;
 
-namespace GhostServiceBuster.ServiceInfoExtractor;
+namespace GhostServiceBuster.Extract;
 
 internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
 {

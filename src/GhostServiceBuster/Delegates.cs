@@ -1,5 +1,5 @@
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 
 namespace GhostServiceBuster;
 

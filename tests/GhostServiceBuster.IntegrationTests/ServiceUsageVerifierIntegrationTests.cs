@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster.IntegrationTests;
@@ -39,7 +39,8 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Act
             var unusedServices =
-                ServiceUsageVerifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices, allServicesFilters);
+                ServiceUsageVerifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices,
+                    allServicesFilters);
 
             // Assert
             unusedServices.Should().HaveCount(2);

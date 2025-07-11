@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 
 namespace GhostServiceBuster.Collections;
 

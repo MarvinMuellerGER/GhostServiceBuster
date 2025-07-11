@@ -3,10 +3,10 @@
 using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
-using GhostServiceBuster.ServiceInfoExtractor;
+using GhostServiceBuster.Detect;
+using GhostServiceBuster.Extract;
 
-namespace GhostServiceBuster.UnitTests.ServiceInfoExtractor;
+namespace GhostServiceBuster.UnitTests.Extract;
 
 public static class ServiceInfoExtractorHandlerTests
 {

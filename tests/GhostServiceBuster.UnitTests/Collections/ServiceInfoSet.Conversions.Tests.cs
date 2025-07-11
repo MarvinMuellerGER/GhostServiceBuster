@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 
 namespace GhostServiceBuster.UnitTests.Collections;
 

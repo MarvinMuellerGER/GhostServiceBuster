@@ -47,21 +47,24 @@ public interface IServiceUsageVerifierWithoutCachedFilters : IServiceUsageVerifi
         return unusedServices;
     }
 
-    ServiceInfoSet FindUnusedServicesUsingOnlyOneTimeAllServicesFilters<TAllServicesCollection, TRootServicesCollection>(
-        in TAllServicesCollection allServices,
-        in TRootServicesCollection rootServices,
-        params ServiceInfoFilterInfoList allServicesFilters)
+    ServiceInfoSet
+        FindUnusedServicesUsingOnlyOneTimeAllServicesFilters<TAllServicesCollection, TRootServicesCollection>(
+            in TAllServicesCollection allServices,
+            in TRootServicesCollection rootServices,
+            params ServiceInfoFilterInfoList allServicesFilters)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull =>
         FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices, allServicesFilters);
 
-    ServiceInfoSet FindUnusedServicesUsingOnlyOneTimeRootServicesFilters<TAllServicesCollection, TRootServicesCollection>(
+    ServiceInfoSet FindUnusedServicesUsingOnlyOneTimeRootServicesFilters<TAllServicesCollection,
+        TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         params ServiceInfoFilterInfoList rootServicesFilters)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull =>
-        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices, rootServicesFilters: rootServicesFilters);
+        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices,
+            rootServicesFilters: rootServicesFilters);
 
     ServiceInfoSet FindUnusedServicesUsingOnlyOneTimeUnusedServicesFilters
         <TAllServicesCollection, TRootServicesCollection>(
@@ -70,7 +73,8 @@ public interface IServiceUsageVerifierWithoutCachedFilters : IServiceUsageVerifi
             params ServiceInfoFilterInfoList unusedServicesFilters)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull =>
-        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices, unusedServicesFilters: unusedServicesFilters);
+        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices,
+            unusedServicesFilters: unusedServicesFilters);
 }
 
 public interface IServiceUsageVerifierWithoutCachedFiltersFluently
@@ -93,7 +97,8 @@ public interface IServiceUsageVerifierWithoutCachedFiltersFluently
         params ServiceInfoFilterInfoList allServicesFilters)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull =>
-        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices, out unusedServices, allServicesFilters);
+        FindUnusedServicesUsingOnlyOneTimeFilters(in allServices, in rootServices, out unusedServices,
+            allServicesFilters);
 
     IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeRootServicesFilters<TAllServicesCollection,
         TRootServicesCollection>(

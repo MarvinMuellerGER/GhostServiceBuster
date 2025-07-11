@@ -3,7 +3,7 @@
 using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
-using GhostServiceBuster.Core;
+using GhostServiceBuster.Detect;
 using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster.UnitTests.Filter;

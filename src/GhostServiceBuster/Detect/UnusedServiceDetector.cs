@@ -1,12 +1,11 @@
-
 using GhostServiceBuster.Collections;
 
-namespace GhostServiceBuster.Core;
+namespace GhostServiceBuster.Detect;
 
-internal sealed class CoreServiceUsageVerifier : ICoreServiceUsageVerifier
+internal sealed class UnusedServiceDetector : IUnusedServiceDetector
 {
     /// <summary>
-    /// Identifies services that are not used in the dependency tree starting from root services.
+    ///     Identifies services that are not used in the dependency tree starting from root services.
     /// </summary>
     public ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
     {
@@ -29,7 +28,7 @@ internal sealed class CoreServiceUsageVerifier : ICoreServiceUsageVerifier
     }
 
     private static IReadOnlyList<ServiceInfo> FindDirectDependencies(
-        IReadOnlyList<ServiceInfo> potentialDependencies, 
+        IReadOnlyList<ServiceInfo> potentialDependencies,
         IReadOnlyList<ServiceInfo> currentServices)
         => potentialDependencies.GetServicesInjectedInto(currentServices);
 
@@ -46,22 +45,22 @@ internal sealed class CoreServiceUsageVerifier : ICoreServiceUsageVerifier
 file static class ServiceInfoExtensions
 {
     /// <summary>
-    /// Finds services from the source list that are injected into any service in the target list.
+    ///     Finds services from the source list that are injected into any service in the target list.
     /// </summary>
     public static IReadOnlyList<ServiceInfo> GetServicesInjectedInto(
         this IReadOnlyList<ServiceInfo> sourceServices, IReadOnlyList<ServiceInfo> targetServices)
     {
         var requiredParameterTypes = targetServices.GetConstructorParameterTypes();
-        
+
         return sourceServices
             .Where(service => IsInjectedIntoAnyOf(service, requiredParameterTypes))
             .ToArray();
     }
-    
+
     private static bool IsInjectedIntoAnyOf(ServiceInfo service, IEnumerable<Type> requiredTypes)
     {
         return service.ServiceType.MatchesTypeOrGenericDefinition(serviceType =>
-            requiredTypes.Any(requiredType => 
+            requiredTypes.Any(requiredType =>
                 requiredType.MatchesTypeOrGenericDefinition(type => type == serviceType)));
     }
 
