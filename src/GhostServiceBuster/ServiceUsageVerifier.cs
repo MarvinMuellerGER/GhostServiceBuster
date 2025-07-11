@@ -15,6 +15,15 @@ internal sealed class ServiceUsageVerifier(
     IFilterCacheHandler unusedServicesFilterCacheHandler) : IServiceUsageVerifier
 {
     public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+        IServiceInfoExtractor<TServiceCollection> extractor)
+        where TServiceCollection : notnull
+    {
+        serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
         ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {

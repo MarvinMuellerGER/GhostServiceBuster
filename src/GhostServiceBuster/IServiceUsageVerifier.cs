@@ -10,6 +10,10 @@ public interface IServiceUsageVerifier : IImmutableServiceUsageVerifier
     IImmutableServiceUsageVerifier AsImmutable() => this;
 
     IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+        IServiceInfoExtractor<TServiceCollection> extractor)
+        where TServiceCollection : notnull;
+
+    IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
         ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;
 
