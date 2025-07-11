@@ -39,7 +39,7 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Act
             var unusedServices =
-                ServiceUsageVerifier.GetIndividualUnusedServices(allServices, rootServices, allServicesFilters);
+                ServiceUsageVerifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices, allServicesFilters);
 
             // Assert
             unusedServices.Should().HaveCount(2);
@@ -62,7 +62,7 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Act
             var unusedServices =
-                ServiceUsageVerifier.GetIndividualUnusedServices(allServices, rootServices);
+                ServiceUsageVerifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             unusedServices.Should().HaveCount(1);

@@ -96,7 +96,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetIndividualUnusedServices(allServices, rootServices);
+            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -127,7 +127,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetIndividualUnusedServices(allServices, rootServices);
+            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -158,7 +158,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
-            var result = Verifier.GetIndividualUnusedServices(allServices, rootServices);
+            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -207,7 +207,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetIndividualUnusedServices(
+            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(
                 allServices,
                 rootServices,
                 allServicesFilters,
@@ -251,7 +251,7 @@ public static class ServiceUsageVerifierTests
                 .Returns([]);
 
             // Act
-            var result = Verifier.GetIndividualUnusedServices(
+            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(
                 services,
                 services,
                 allServicesFilters,
