@@ -4,6 +4,8 @@ namespace GhostServiceBuster.Core;
 
 internal interface ICoreServiceUsageVerifier
 {
-    ServiceInfoSet GetUnusedServices(
-        in ServiceInfoSet allServices, in ServiceInfoSet rootServices);
+    /// <summary>
+    ///     Identifies services that are not used in the dependency chain of the root services.
+    /// </summary>
+    ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices);
 }

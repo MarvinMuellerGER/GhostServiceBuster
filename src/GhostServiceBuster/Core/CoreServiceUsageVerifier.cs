@@ -1,47 +1,79 @@
+
 using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Core;
 
 internal sealed class CoreServiceUsageVerifier : ICoreServiceUsageVerifier
 {
-    public ServiceInfoSet GetUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
+    /// <summary>
+    /// Identifies services that are not used in the dependency tree starting from root services.
+    /// </summary>
+    public ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
     {
-        var injectedServices = rootServices;
-        var unusedServices = allServices.Except(injectedServices);
+        var usedServices = rootServices.ToList();
+        var unusedCandidates = allServices.Except(usedServices).ToList();
 
-        while (true)
+        DiscoverDependencyChain(usedServices, unusedCandidates);
+
+        return unusedCandidates;
+    }
+
+    private static void DiscoverDependencyChain(List<ServiceInfo> usedServices, List<ServiceInfo> unusedCandidates)
+    {
+        IReadOnlyList<ServiceInfo> foundDependencies;
+        do
         {
-            injectedServices = unusedServices.GetServicesInjectedInto(injectedServices);
+            foundDependencies = FindDirectDependencies(unusedCandidates, usedServices);
+            MoveDependenciesToUsed(usedServices, unusedCandidates, foundDependencies);
+        } while (foundDependencies.Count > 0);
+    }
 
-            if (injectedServices.Count is 0)
-                return unusedServices;
+    private static IReadOnlyList<ServiceInfo> FindDirectDependencies(
+        IReadOnlyList<ServiceInfo> potentialDependencies, 
+        IReadOnlyList<ServiceInfo> currentServices)
+        => potentialDependencies.GetServicesInjectedInto(currentServices);
 
-            unusedServices = [.. unusedServices.Except(injectedServices)];
-        }
+    private static void MoveDependenciesToUsed(
+        List<ServiceInfo> usedServices,
+        List<ServiceInfo> unusedCandidates,
+        IReadOnlyList<ServiceInfo> foundDependencies)
+    {
+        usedServices.AddRange(foundDependencies);
+        unusedCandidates.RemoveAll(foundDependencies.Contains);
     }
 }
 
-file static class ServiceInfoSetExtensions
+file static class ServiceInfoExtensions
 {
-    public static ServiceInfoSet GetServicesInjectedInto(
-        this ServiceInfoSet allServices, in ServiceInfoSet injectedServices)
+    /// <summary>
+    /// Finds services from the source list that are injected into any service in the target list.
+    /// </summary>
+    public static IReadOnlyList<ServiceInfo> GetServicesInjectedInto(
+        this IReadOnlyList<ServiceInfo> sourceServices, IReadOnlyList<ServiceInfo> targetServices)
     {
-        var injectedTypes = injectedServices.GetConstructorParameterTypes();
-
-        return allServices.Where(serviceInfo =>
-            serviceInfo.ServiceType.ConsiderGenericType(serviceType =>
-                injectedTypes.Any(injectedType => injectedType.ConsiderGenericType(i => i == serviceType))));
+        var requiredParameterTypes = targetServices.GetConstructorParameterTypes();
+        
+        return sourceServices
+            .Where(service => IsInjectedIntoAnyOf(service, requiredParameterTypes))
+            .ToArray();
+    }
+    
+    private static bool IsInjectedIntoAnyOf(ServiceInfo service, IEnumerable<Type> requiredTypes)
+    {
+        return service.ServiceType.MatchesTypeOrGenericDefinition(serviceType =>
+            requiredTypes.Any(requiredType => 
+                requiredType.MatchesTypeOrGenericDefinition(type => type == serviceType)));
     }
 
-    private static IEnumerable<Type> GetConstructorParameterTypes(this ServiceInfoSet services)
+    private static IEnumerable<Type> GetConstructorParameterTypes(this IReadOnlyList<ServiceInfo> services)
     {
-        var serviceConstructors = services.SelectMany(s => s.ImplementationType.GetConstructors());
-        var serviceConstructorParameters = serviceConstructors.SelectMany(c => c.GetParameters());
-        var serviceConstructorParameterTypes = serviceConstructorParameters.Select(p => p.ParameterType);
-
-        return serviceConstructorParameterTypes.Distinct();
+        return services
+            .SelectMany(service => service.ImplementationType.GetConstructors())
+            .SelectMany(constructor => constructor.GetParameters())
+            .Select(parameter => parameter.ParameterType)
+            .Distinct();
     }
 
-    private static bool ConsiderGenericType(this Type type, Func<Type, bool> func) =>
-        func(type) || (type.IsGenericType && func(type.GetGenericTypeDefinition()));
+    private static bool MatchesTypeOrGenericDefinition(this Type type, Func<Type, bool> matcher) =>
+        matcher(type) || (type.IsGenericType && matcher(type.GetGenericTypeDefinition()));
 }

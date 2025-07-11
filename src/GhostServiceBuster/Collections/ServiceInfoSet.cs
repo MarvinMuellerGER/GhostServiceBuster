@@ -51,7 +51,9 @@ public partial class ServiceInfoSet(IImmutableSet<ServiceInfo> set) : IImmutable
     public bool TryGetValue(ServiceInfo equalValue, out ServiceInfo actualValue) =>
         set.TryGetValue(equalValue, out actualValue);
 
-    public IImmutableSet<ServiceInfo> Union(IEnumerable<ServiceInfo> other) => set.Union(other);
+    IImmutableSet<ServiceInfo> IImmutableSet<ServiceInfo>.Union(IEnumerable<ServiceInfo> other) => set.Union(other);
+
+    public ServiceInfoSet Union(IEnumerable<ServiceInfo> other) => new(((IImmutableSet<ServiceInfo>)this).Union(other));
 
     public ServiceInfoSet Except(IEnumerable<ServiceInfo> other) => new(set.Except(other));
 

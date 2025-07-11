@@ -21,7 +21,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = ServiceInfoSet.Empty;
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().BeEquivalentTo(allServices);
@@ -40,7 +40,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = allServices;
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().BeEmpty();
@@ -60,7 +60,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = new ServiceInfoSet([service2]); // Service2 is the root and depends on Service1
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().HaveCount(1);
@@ -82,7 +82,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = new ServiceInfoSet([service3]); // Service3 is the root
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().HaveCount(1);
@@ -103,7 +103,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = new ServiceInfoSet([service1]); // Service1 is the root
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().HaveCount(1);
@@ -127,7 +127,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = new ServiceInfoSet([service2, service3]); // Multiple roots
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().HaveCount(1);
@@ -149,7 +149,7 @@ public class CoreServiceUsageVerifierTests
         var rootServices = new ServiceInfoSet([genericConsumer]);
 
         // Act
-        var unusedServices = verifier.GetUnusedServices(allServices, rootServices);
+        var unusedServices = verifier.FindUnusedServices(allServices, rootServices);
 
         // Assert
         unusedServices.Should().HaveCount(1);

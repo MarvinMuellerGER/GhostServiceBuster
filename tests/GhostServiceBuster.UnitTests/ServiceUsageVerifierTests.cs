@@ -92,7 +92,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
                 .Returns(args => args.ArgAt<ServiceInfoSet>(0));
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
@@ -123,7 +123,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
                 .Returns(args => args.ArgAt<ServiceInfoSet>(0));
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
@@ -154,7 +154,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
                 .Returns(args => args.ArgAt<ServiceInfoSet>(0));
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
@@ -201,7 +201,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(extractedAllServices, allServicesFilters).Returns(extractedAllServices);
             FilterHandler.ApplyFilters(extractedRootServices, rootServicesFilters).Returns(extractedRootServices);
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             FilterHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
@@ -247,7 +247,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(extractedServices, rootServicesFilters)
                 .Returns(new ServiceInfoSet([ServiceInfo2]));
 
-            CoreServiceUsageVerifier.GetUnusedServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoSet>())
+            CoreServiceUsageVerifier.FindUnusedServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoSet>())
                 .Returns([]);
 
             // Act
@@ -281,7 +281,7 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
@@ -309,7 +309,7 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
@@ -337,7 +337,7 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
@@ -384,7 +384,7 @@ public static class ServiceUsageVerifierTests
             AllServicesFilterCacheHandler.ApplyFilters(extractedAllServices, allServicesFilters).Returns(extractedAllServices);
             RootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, rootServicesFilters).Returns(extractedRootServices);
 
-            CoreServiceUsageVerifier.GetUnusedServices(extractedAllServices, extractedRootServices)
+            CoreServiceUsageVerifier.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             UnusedServicesFilterCacheHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
@@ -430,7 +430,7 @@ public static class ServiceUsageVerifierTests
             RootServicesFilterCacheHandler.ApplyFilters(extractedServices, rootServicesFilters)
                 .Returns(new ServiceInfoSet([ServiceInfo2]));
 
-            CoreServiceUsageVerifier.GetUnusedServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoSet>())
+            CoreServiceUsageVerifier.FindUnusedServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoSet>())
                 .Returns([]);
 
             // Act
