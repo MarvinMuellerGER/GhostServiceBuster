@@ -11,19 +11,21 @@ namespace GhostServiceBuster.IntegrationTests;
 public static class ServiceUsageVerifierIntegrationTests
 {
     private static readonly IFilterHandler FilterHandler = new FilterHandler();
-    
+
     private static readonly IServiceUsageVerifier ServiceUsageVerifier = new ServiceUsageVerifier(
         new CoreServiceUsageVerifier(),
         new ServiceInfoExtractorHandler(),
         FilterHandler,
-        new FilterCacheHandler(FilterHandler), new FilterCacheHandler(FilterHandler), new FilterCacheHandler(FilterHandler));
+        new FilterCacheHandler(FilterHandler),
+        new FilterCacheHandler(FilterHandler),
+        new FilterCacheHandler(FilterHandler));
 
     static ServiceUsageVerifierIntegrationTests() =>
         ServiceUsageVerifier.RegisterServiceInfoExtractor<List<Type>>(types =>
             types.Select(t => new ServiceInfo(t.IsInterface ? t : t.GetInterfaces().FirstOrDefault() ?? t, t))
                 .ToImmutableHashSet());
 
-    public sealed class GetUnusedServices
+    public sealed class GetIndividualUnusedServices
     {
         [Fact]
         public void WithRealDependencies_ReturnsCorrectResult()
@@ -46,10 +48,8 @@ public static class ServiceUsageVerifierIntegrationTests
             );
 
             // Act
-            var unusedServices = ServiceUsageVerifier.GetIndividualUnusedServices(
-                allServices,
-                rootServices,
-                allServicesFilters);
+            var unusedServices =
+                ServiceUsageVerifier.GetIndividualUnusedServices(allServices, rootServices, allServicesFilters);
 
             // Assert
             unusedServices.Should().HaveCount(2);
@@ -71,14 +71,49 @@ public static class ServiceUsageVerifierIntegrationTests
             var rootServices = new List<Type> { rootService };
 
             // Act
-            var unusedServices = ServiceUsageVerifier.GetIndividualUnusedServices(
-                allServices,
-                rootServices);
+            var unusedServices =
+                ServiceUsageVerifier.GetIndividualUnusedServices(allServices, rootServices);
 
             // Assert
             unusedServices.Should().HaveCount(1);
             unusedServices.Should().Contain(s => s.ServiceType == typeof(IService2));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService1));
+        }
+    }
+
+    public sealed class GetUnusedServices
+    {
+        [Fact]
+        public void WithRegisterAllServicesFiltersCallBefore_ReturnsCorrectResult()
+        {
+            // Arrange
+            var service1 = typeof(Service1);
+            var service2 = typeof(Service2);
+            var service3 = typeof(Service3);
+            var rootService = typeof(RootService);
+
+            var allServices = new List<Type> { service1, service2, service3, rootService };
+            var rootServices = new List<Type> { rootService };
+
+            var excludeService3Filter = new ServiceInfoFilter(services =>
+                services.Where(s => s.ServiceType != typeof(IService3)).ToImmutableHashSet());
+
+            var allServicesFilters = new ServiceInfoFilterInfoList
+            (
+                new ServiceInfoFilterInfo(excludeService3Filter)
+            );
+
+            // Act
+            var unusedServices = ServiceUsageVerifier
+                .RegisterAllServicesFilters(allServicesFilters)
+                .GetUnusedServices(allServices, rootServices);
+
+            // Assert
+            unusedServices.Should().HaveCount(2);
+            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService1));
+            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService2));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IRootService));
         }
     }
 
