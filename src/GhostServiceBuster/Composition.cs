@@ -17,6 +17,7 @@ internal sealed partial class Composition
     private static void Setup() => DI.Setup().Hint(Hint.Resolve, "OFF")
         .RootBind<IServiceUsageVerifier>(nameof(ServiceUsageVerifier)).To<ServiceUsageVerifier>()
         .Bind<IUnusedServiceDetector>().As(Singleton).To<UnusedServiceDetector>()
+        .Bind<IDependencyDetector>().As(Singleton).To<ConstructorInjectionDetector>()
         .Bind<IServiceInfoExtractorHandler>().As(PerResolve).To<ServiceInfoExtractorHandler>()
         .Bind<IFilterHandler>().As(Singleton).To<FilterHandler>()
         .Bind<IFilterCacheHandler>().To<FilterCacheHandler>();
