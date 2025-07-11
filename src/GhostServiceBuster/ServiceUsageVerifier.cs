@@ -10,23 +10,32 @@ internal sealed class ServiceUsageVerifier(
     ICoreServiceUsageVerifier coreServiceUsageVerifier,
     IServiceInfoExtractorHandler serviceInfoExtractorHandler,
     IFilterHandler filterHandler,
-    IFilterCacheHandler filterCacheHandler) : IServiceUsageVerifier
+    IFilterCacheHandler allServicesFilterCacheHandler,
+    IFilterCacheHandler rootServicesFilterCacheHandler,
+    IFilterCacheHandler unusedServicesFilterCacheHandler) : IServiceUsageVerifier
 {
-    public void RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
+    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+        ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
-        => serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
+    {
+        serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
 
-    public void RegisterFilters(ServiceInfoFilterInfoList? allServicesFilters = null,
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterFilters(ServiceInfoFilterInfoList? allServicesFilters = null,
         ServiceInfoFilterInfoList? rootServicesFilters = null, ServiceInfoFilterInfoList? unusedServicesFilters = null)
     {
         if (allServicesFilters is not null)
-            filterCacheHandler.RegisterFilters(allServicesFilters);
+            allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
 
         if (rootServicesFilters is not null)
-            filterCacheHandler.RegisterFilters(rootServicesFilters);
+            rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
 
         if (unusedServicesFilters is not null)
-            filterCacheHandler.RegisterFilters(unusedServicesFilters);
+            unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
+
+        return this;
     }
 
     public ServiceInfoSet GetUnusedServices<TAllServicesCollection, TRootServicesCollection>(
@@ -41,12 +50,12 @@ internal sealed class ServiceUsageVerifier(
         var extractedAllServices = serviceInfoExtractorHandler.GetServiceInfo(allServices);
         var extractedRootServices = serviceInfoExtractorHandler.GetServiceInfo(rootServices);
 
-        var filteredAllServices = filterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
-        var filteredRootServices = filterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
+        var filteredAllServices = allServicesFilterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
+        var filteredRootServices = rootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
 
         var unusedServices = coreServiceUsageVerifier.GetUnusedServices(filteredAllServices, filteredRootServices);
 
-        return filterCacheHandler.ApplyFilters(unusedServices, oneTimeUnusedServicesFilters);
+        return unusedServicesFilterCacheHandler.ApplyFilters(unusedServices, oneTimeUnusedServicesFilters);
     }
 
     public ServiceInfoSet GetIndividualUnusedServices<TAllServicesCollection, TRootServicesCollection>(

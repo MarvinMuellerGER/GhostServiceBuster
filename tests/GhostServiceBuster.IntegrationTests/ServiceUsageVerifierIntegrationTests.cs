@@ -10,11 +10,13 @@ namespace GhostServiceBuster.IntegrationTests;
 
 public static class ServiceUsageVerifierIntegrationTests
 {
-    private static readonly ServiceUsageVerifier ServiceUsageVerifier = new(
+    private static readonly IFilterHandler FilterHandler = new FilterHandler();
+    
+    private static readonly IServiceUsageVerifier ServiceUsageVerifier = new ServiceUsageVerifier(
         new CoreServiceUsageVerifier(),
         new ServiceInfoExtractorHandler(),
-        new FilterHandler(),
-        new FilterCacheHandler(new FilterHandler()));
+        FilterHandler,
+        new FilterCacheHandler(FilterHandler), new FilterCacheHandler(FilterHandler), new FilterCacheHandler(FilterHandler));
 
     static ServiceUsageVerifierIntegrationTests() =>
         ServiceUsageVerifier.RegisterServiceInfoExtractor<List<Type>>(types =>

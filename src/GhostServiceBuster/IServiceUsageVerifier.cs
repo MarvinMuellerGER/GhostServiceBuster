@@ -6,21 +6,21 @@ public interface IServiceUsageVerifier : IImmutableServiceUsageVerifier
 {
     IImmutableServiceUsageVerifier AsImmutable() => this;
 
-    void RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
+    IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;
 
-    void RegisterFilters(
+    IServiceUsageVerifier RegisterFilters(
         ServiceInfoFilterInfoList? allServicesFilters = null,
         ServiceInfoFilterInfoList? rootServicesFilters = null,
         ServiceInfoFilterInfoList? unusedServicesFilters = null);
 
-    void RegisterAllServicesFilters(ServiceInfoFilterInfoList allServicesFilters)
+    IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilterInfoList allServicesFilters)
         => RegisterFilters(allServicesFilters);
 
-    void RegisterRootServicesFilters(ServiceInfoFilterInfoList rootServicesFilters)
+    IServiceUsageVerifier RegisterRootServicesFilters(ServiceInfoFilterInfoList rootServicesFilters)
         => RegisterFilters(rootServicesFilters: rootServicesFilters);
 
-    void RegisterUnusedServicesFilters(ServiceInfoFilterInfoList unusedServicesFilters)
+    IServiceUsageVerifier RegisterUnusedServicesFilters(ServiceInfoFilterInfoList unusedServicesFilters)
         => RegisterFilters(unusedServicesFilters: unusedServicesFilters);
 }
 
