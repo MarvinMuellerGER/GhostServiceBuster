@@ -9,7 +9,7 @@ namespace GhostServiceBuster.UnitTests.Core;
 public class CoreServiceUsageVerifierTests
 {
     [Fact]
-    public void GetUnusedServices_WhenNoRootServices_ReturnsAllServices()
+    public void FindUnusedServices_WhenNoRootServices_ReturnsAllServices()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -28,7 +28,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WhenAllServicesAreRoots_ReturnsEmptySet()
+    public void FindUnusedServices_WhenAllServicesAreRoots_ReturnsEmptySet()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -47,7 +47,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WhenDirectDependency_FindsUsedServices()
+    public void FindUnusedServices_WhenDirectDependency_FindsUsedServices()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -68,7 +68,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WithTransitiveDependencies_FindsAllUsedServices()
+    public void FindUnusedServices_WithTransitiveDependencies_FindsAllUsedServices()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -90,7 +90,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WithCyclicDependencies_HandlesThemCorrectly()
+    public void FindUnusedServices_WithCyclicDependencies_HandlesThemCorrectly()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -111,7 +111,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WithMultipleRoots_FindsAllUsedServices()
+    public void FindUnusedServices_WithMultipleRoots_FindsAllUsedServices()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();
@@ -135,7 +135,7 @@ public class CoreServiceUsageVerifierTests
     }
 
     [Fact]
-    public void GetUnusedServices_WithGenericParameters_HandlesThemCorrectly()
+    public void FindUnusedServices_WithGenericParameters_HandlesThemCorrectly()
     {
         // Arrange
         var verifier = new CoreServiceUsageVerifier();

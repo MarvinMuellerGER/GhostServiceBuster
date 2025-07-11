@@ -38,7 +38,7 @@ internal sealed class ServiceUsageVerifier(
         return this;
     }
 
-    public IServiceUsageVerifier GetUnusedServices<TAllServicesCollection, TRootServicesCollection>(
+    public IServiceUsageVerifier FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         out ServiceInfoSet unusedServices,
@@ -60,7 +60,7 @@ internal sealed class ServiceUsageVerifier(
         return this;
     }
 
-    public IServiceUsageVerifier GetUnusedServicesUsingOnlyOneTimeFilters<TAllServicesCollection, TRootServicesCollection>(
+    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeFilters<TAllServicesCollection, TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         out ServiceInfoSet unusedServices,

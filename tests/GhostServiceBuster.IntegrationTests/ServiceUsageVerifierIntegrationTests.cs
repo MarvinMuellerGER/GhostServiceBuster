@@ -39,7 +39,7 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Act
             var unusedServices =
-                ServiceUsageVerifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices, allServicesFilters);
+                ServiceUsageVerifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices, allServicesFilters);
 
             // Assert
             unusedServices.Should().HaveCount(2);
@@ -62,7 +62,7 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Act
             var unusedServices =
-                ServiceUsageVerifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+                ServiceUsageVerifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             unusedServices.Should().HaveCount(1);
@@ -71,7 +71,7 @@ public static class ServiceUsageVerifierIntegrationTests
         }
     }
 
-    public sealed class GetUnusedServices
+    public sealed class FindUnusedServices
     {
         [Fact]
         public void WithRegisterAllServicesFiltersCallBefore_ReturnsCorrectResult()
@@ -96,7 +96,7 @@ public static class ServiceUsageVerifierIntegrationTests
             // Act
             var unusedServices = ServiceUsageVerifier
                 .RegisterAllServicesFilters(allServicesFilters)
-                .GetUnusedServices(allServices, rootServices);
+                .FindUnusedServices(allServices, rootServices);
 
             // Assert
             unusedServices.Should().HaveCount(2);

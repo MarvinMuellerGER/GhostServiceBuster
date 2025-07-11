@@ -96,7 +96,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -127,7 +127,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -158,7 +158,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
-            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -207,7 +207,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(
                 allServices,
                 rootServices,
                 allServicesFilters,
@@ -251,7 +251,7 @@ public static class ServiceUsageVerifierTests
                 .Returns([]);
 
             // Act
-            var result = Verifier.GetUnusedServicesUsingOnlyOneTimeFilters(
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(
                 services,
                 services,
                 allServicesFilters,
@@ -265,7 +265,7 @@ public static class ServiceUsageVerifierTests
         }
     }
 
-    public sealed class GetUnusedServices
+    public sealed class FindUnusedServices
     {
         [Fact]
         public void WithDifferentCollectionTypes_WorksCorrectly()
@@ -285,7 +285,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServices(allServices, rootServices);
+            var result = Verifier.FindUnusedServices(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -313,7 +313,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServices(allServices, rootServices);
+            var result = Verifier.FindUnusedServices(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -341,7 +341,7 @@ public static class ServiceUsageVerifierTests
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
-            var result = Verifier.GetUnusedServices(allServices, rootServices);
+            var result = Verifier.FindUnusedServices(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -390,7 +390,7 @@ public static class ServiceUsageVerifierTests
             UnusedServicesFilterCacheHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
 
             // Act
-            var result = Verifier.GetUnusedServices(
+            var result = Verifier.FindUnusedServices(
                 allServices,
                 rootServices,
                 allServicesFilters,
@@ -434,7 +434,7 @@ public static class ServiceUsageVerifierTests
                 .Returns([]);
 
             // Act
-            var result = Verifier.GetUnusedServices(
+            var result = Verifier.FindUnusedServices(
                 services,
                 services,
                 allServicesFilters,
