@@ -7,7 +7,13 @@ internal interface IUnusedServiceDetector
     void RegisterDependencyDetector(DependencyDetector dependencyDetector);
 
     void RegisterDependencyDetector(IDependencyDetector dependencyDetector) =>
-        RegisterDependencyDetector(dependencyDetector.FindDirectDependencies);
+        RegisterDependencyDetector((servicesToAnalyse, potentialDependencies) =>
+        {
+            var task = dependencyDetector.FindDirectDependencies(servicesToAnalyse, potentialDependencies);
+            task.Wait();
+
+            return task.Result;
+        });
 
     void RegisterDependencyDetector(DependencyDetectorTupleResult dependencyDetector) =>
         RegisterDependencyDetector((servicesToAnalyze, potentialDependencies) =>

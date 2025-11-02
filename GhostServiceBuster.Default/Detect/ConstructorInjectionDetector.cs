@@ -8,11 +8,12 @@ file sealed class ConstructorInjectionDetector : IDependencyDetector
     /// <summary>
     ///     Finds services from the source list that are injected into any service in the target list.
     /// </summary>
-    public ServiceInfoSet FindDirectDependencies(ServiceInfoSet servicesToAnalyse, ServiceInfoSet potentialDependencies)
+    public Task<ServiceInfoSet> FindDirectDependencies(ServiceInfoSet servicesToAnalyse,
+        ServiceInfoSet potentialDependencies)
     {
         var injectedTypes = GetConstructorParameterTypes(servicesToAnalyse);
 
-        return potentialDependencies.Where(service => IsOfAnyOfTheseTypes(service, injectedTypes));
+        return Task.FromResult(potentialDependencies.Where(service => IsOfAnyOfTheseTypes(service, injectedTypes)));
     }
 
     private static IEnumerable<Type> GetConstructorParameterTypes(ServiceInfoSet services) =>

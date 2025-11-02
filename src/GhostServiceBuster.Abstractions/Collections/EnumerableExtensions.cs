@@ -7,6 +7,10 @@ namespace GhostServiceBuster.Collections;
 
 public static class EnumerableExtensions
 {
+    public static ServiceInfoSet ToServiceInfoSet<TServiceInfo>(this IEnumerable<TServiceInfo> enumerable)
+        where TServiceInfo : ServiceInfo =>
+        enumerable.Cast<ServiceInfo>().ToImmutableHashSet();
+    
     public static ServiceInfoSet Select(this IEnumerable source, Func<object?, ServiceInfo> selector) =>
         Select<ServiceInfo>(source, selector).ToImmutableHashSet();
 

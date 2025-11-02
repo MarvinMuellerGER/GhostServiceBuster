@@ -1,5 +1,8 @@
 ﻿<Solution>
-  <Project Path="GhostServiceBuster.Default\GhostServiceBuster.Default.csproj" Type="Classic C#" />
+  <Folder Name="/Extensions/">
+    <Project Path="GhostServiceBuster.Default\GhostServiceBuster.Default.csproj" Type="Classic C#" />
+    <Project Path="GhostServiceBuster.MS\GhostServiceBuster.MS.csproj" Type="Classic C#" />
+  </Folder>
   <Project Path="src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" Type="Classic C#" />
   <Project Path="src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" Type="Classic C#" />
   <Project Path="tests\GhostServiceBuster.IntegrationTests\GhostServiceBuster.IntegrationTests.csproj" Type="Classic C#" />
