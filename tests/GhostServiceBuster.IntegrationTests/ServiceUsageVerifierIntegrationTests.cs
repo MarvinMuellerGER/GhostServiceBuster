@@ -1,4 +1,3 @@
-using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
 
@@ -6,7 +5,7 @@ namespace GhostServiceBuster.IntegrationTests;
 
 public static class ServiceUsageVerifierIntegrationTests
 {
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = IServiceUsageVerifier.New;
+    private static readonly IServiceUsageVerifier ServiceUsageVerifier = Verify.New;
 
     static ServiceUsageVerifierIntegrationTests() =>
         ServiceUsageVerifier.RegisterServiceInfoExtractor<Type>(t =>

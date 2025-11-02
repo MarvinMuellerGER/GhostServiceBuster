@@ -13,7 +13,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FluentAssertions" Version="8.8.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0"/>
         <PackageReference Include="NSubstitute" Version="5.3.0"/>
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17">
             <PrivateAssets>all</PrivateAssets>
@@ -28,17 +28,12 @@
 
     <ItemGroup>
         <Using Include="Xunit"/>
+        <Using Include="FluentAssertions"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\GhostServiceBuster\GhostServiceBuster.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Cache\" />
-        <Folder Include="Detect\" />
-        <Folder Include="Filter\"/>
-        <Folder Include="Extract\" />
+        <ProjectReference Include="..\..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
     </ItemGroup>
 
 </Project>

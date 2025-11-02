@@ -1,0 +1,1 @@
+global using ServiceInfoTuple = (System.Type ServiceType, System.Type ImplementationType);

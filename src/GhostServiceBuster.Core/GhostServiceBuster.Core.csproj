@@ -4,12 +4,12 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>GhostServiceBuster</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-        <InternalsVisibleTo Include="$(MSBuildProjectName).IntegrationTests"/>
-        <InternalsVisibleTo Include="$(MSBuildProjectName).UnitTests"/>
+        <InternalsVisibleTo Include="$(SolutionName).UnitTests"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -17,5 +17,15 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\GhostServiceBuster.Abstractions\Detect\ServiceInfoTuple.cs">
+        <Link>Extract\ServiceInfoTuple.cs</Link>
+      </Compile>
     </ItemGroup>
 </Project>

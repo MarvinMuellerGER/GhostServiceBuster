@@ -1,5 +1,4 @@
 using System.Collections;
-using FluentAssertions;
 using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;

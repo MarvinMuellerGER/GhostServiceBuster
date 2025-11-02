@@ -1,4 +1,3 @@
-using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
 

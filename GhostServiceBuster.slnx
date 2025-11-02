@@ -1,6 +1,6 @@
 ﻿<Solution>
-    <Project Path="src\GhostServiceBuster\GhostServiceBuster.csproj"/>
-    <Project Path="tests\GhostServiceBuster.IntegrationTests\GhostServiceBuster.IntegrationTests.csproj"
-             Type="Classic C#"/>
-    <Project Path="tests\GhostServiceBuster.UnitTests\GhostServiceBuster.UnitTests.csproj" Type="Classic C#"/>
+  <Project Path="src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" Type="Classic C#" />
+  <Project Path="src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" Type="Classic C#" />
+  <Project Path="tests\GhostServiceBuster.IntegrationTests\GhostServiceBuster.IntegrationTests.csproj" Type="Classic C#" />
+  <Project Path="tests\GhostServiceBuster.UnitTests\GhostServiceBuster.UnitTests.csproj" Type="Classic C#" />
 </Solution>

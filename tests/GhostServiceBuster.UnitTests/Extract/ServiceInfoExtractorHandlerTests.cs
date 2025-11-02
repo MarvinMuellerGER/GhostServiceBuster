@@ -1,6 +1,5 @@
 // ReSharper disable ConvertToLocalFunction
 
-using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
 using GhostServiceBuster.Extract;

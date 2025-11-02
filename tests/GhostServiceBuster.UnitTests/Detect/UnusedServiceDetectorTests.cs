@@ -1,6 +1,5 @@
 // ReSharper disable UnusedParameter.Local
 
-using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
 
