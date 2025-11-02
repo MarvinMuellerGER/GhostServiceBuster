@@ -1,6 +1,5 @@
 // ReSharper disable ConvertToLocalFunction
 
-using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
@@ -13,15 +12,20 @@ public static class ServiceInfoExtractorHandlerTests
     private static readonly ServiceInfo ServiceInfo1 = new(typeof(IDictionary<,>), typeof(Dictionary<,>));
     private static readonly ServiceInfo ServiceInfo2 = new(typeof(IList<>), typeof(List<>));
 
+#pragma warning disable CA1859
+    private static IServiceInfoExtractorHandler GetNewServiceInfoExtractorHandler() =>
+        new ServiceInfoExtractorHandler();
+#pragma warning restore CA1859
+
     public sealed class RegisterServiceInfoExtractor
     {
         [Fact]
         public void ForNewType_AddsExtractor()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
             var testList = new List<string> { "Service1" };
-            ServiceInfoExtractor<List<string>> extractor = _ => new ServiceInfoSet([ServiceInfo1]);
+            ServiceInfoExtractor<string> extractor = _ => new ServiceInfoSet([ServiceInfo1]);
 
             // Act
             handler.RegisterServiceInfoExtractor(extractor);
@@ -36,9 +40,9 @@ public static class ServiceInfoExtractorHandlerTests
         public void ForAlreadyRegisteredType_ThrowsException()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
-            ServiceInfoExtractor<List<string>> extractor1 = _ => new ServiceInfoSet([ServiceInfo1]);
-            ServiceInfoExtractor<List<string>> extractor2 = _ => new ServiceInfoSet([ServiceInfo2]);
+            var handler = GetNewServiceInfoExtractorHandler();
+            ServiceInfoExtractor<string> extractor1 = _ => ServiceInfo1;
+            ServiceInfoExtractor<string> extractor2 = _ => ServiceInfo2;
 
             // Register first extractor
             handler.RegisterServiceInfoExtractor(extractor1);
@@ -46,7 +50,7 @@ public static class ServiceInfoExtractorHandlerTests
             // Act & Assert
             var act = () => handler.RegisterServiceInfoExtractor(extractor2);
             act.Should().Throw<InvalidOperationException>()
-                .WithMessage("*A service info extractor for System.Collections.Generic.List`1*is already registered*");
+                .WithMessage("A service info extractor for System.String is already registered.");
         }
     }
 
@@ -56,7 +60,7 @@ public static class ServiceInfoExtractorHandlerTests
         public void WithRegisteredExtractor_ReturnsExtractedInfo()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
             var testDictionary = new Dictionary<string, string>
             {
                 { "Service1", "1.0" },
@@ -81,7 +85,7 @@ public static class ServiceInfoExtractorHandlerTests
         public void WithServiceInfoSetInput_ReturnsSameInstance()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
             var serviceInfoSet = new ServiceInfoSet([ServiceInfo1]);
 
             // Act
@@ -95,20 +99,20 @@ public static class ServiceInfoExtractorHandlerTests
         public void WithNoRegisteredExtractor_ThrowsException()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
             var testList = new List<string> { "Service1" };
 
             // Act & Assert
             Action act = () => handler.GetServiceInfo(testList);
             act.Should().Throw<InvalidOperationException>()
-                .WithMessage("*No service info extractor registered for System.Collections.Generic.List`1*");
+                .WithMessage("No service info extractor registered for System.String.");
         }
 
         [Fact]
         public void WithMultipleRegisteredExtractors_UsesCorrectExtractor()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
 
             // Register extractor for List<string>
             ServiceInfoExtractor<List<string>> listExtractor = _ => new ServiceInfoSet([ServiceInfo1]);
@@ -137,27 +141,27 @@ public static class ServiceInfoExtractorHandlerTests
         public void WithDerivedType_WorksWithBaseType()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
 
             // Register extractor for object (base class)
             ServiceInfoExtractor<object> objectExtractor = _ => new ServiceInfoSet([ServiceInfo1]);
             handler.RegisterServiceInfoExtractor(objectExtractor);
 
             // Try to get service info for a string (derived from object)
-            var testString = "TestService";
+            const string testString = "TestService";
 
             // Act & Assert
             // This should throw because we need exact type match, not inheritance-based matching
             Action act = () => handler.GetServiceInfo(testString);
             act.Should().Throw<InvalidOperationException>()
-                .WithMessage("*No service info extractor registered for System.String*");
+                .WithMessage("No service info extractor registered for System.String.");
         }
 
         [Fact]
         public void RegisterAndWithCustomType_WorksCorrectly()
         {
             // Arrange
-            var handler = new ServiceInfoExtractorHandler();
+            var handler = GetNewServiceInfoExtractorHandler();
             var customCollection = new CustomServiceCollection
             {
                 Services = [typeof(IList<>), typeof(IDictionary<,>), typeof(IEnumerable<>)]
@@ -171,8 +175,7 @@ public static class ServiceInfoExtractorHandlerTests
                             0 => typeof(List<>),
                             1 => typeof(Dictionary<,>),
                             _ => typeof(HashSet<>)
-                        })).ToImmutableHashSet()
-                );
+                        })));
 
             // Act
             handler.RegisterServiceInfoExtractor(extractor);

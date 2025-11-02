@@ -13,7 +13,11 @@ public partial class ServiceInfoSet(IImmutableSet<ServiceInfo> set) : IImmutable
     {
     }
 
-    public static ServiceInfoSet Empty => new([]);
+    public ServiceInfoSet() : this([])
+    {
+    }
+
+    public static ServiceInfoSet Empty => [];
 
     public int Count => set.Count;
 
@@ -56,6 +60,8 @@ public partial class ServiceInfoSet(IImmutableSet<ServiceInfo> set) : IImmutable
     public ServiceInfoSet Union(IEnumerable<ServiceInfo> other) => new(((IImmutableSet<ServiceInfo>)this).Union(other));
 
     public ServiceInfoSet Except(IEnumerable<ServiceInfo> other) => new(set.Except(other));
+
+    public ServiceInfoSet Concat(IEnumerable<ServiceInfo> other) => set.Concat(other).ToImmutableHashSet();
 
     public ServiceInfoSet Where(Func<ServiceInfo, bool> predicate) =>
         new(((IEnumerable<ServiceInfo>)this).Where(predicate).ToImmutableHashSet());

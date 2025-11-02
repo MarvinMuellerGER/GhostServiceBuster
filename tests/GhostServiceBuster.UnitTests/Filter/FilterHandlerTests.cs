@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
@@ -10,20 +9,17 @@ public static class FilterHandlerTests
 {
     private static readonly IFilterHandler FilterHandler = new FilterHandler();
 
-    private static readonly ServiceInfoFilter Service1Filter = services =>
-        services.Where(s => s == ServiceInfo1).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service1Filter = services => services.Where(s => s == ServiceInfo1);
 
-    private static readonly ServiceInfoFilter Service1Or2Filter = services =>
-        services.Where(s => s == ServiceInfo1 || s == ServiceInfo2).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service1Or2Filter =
+        services => services.Where(s => s == ServiceInfo1 || s == ServiceInfo2);
 
-    private static readonly ServiceInfoFilter Service2Filter = services =>
-        services.Where(s => s == ServiceInfo2).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service2Filter = services => services.Where(s => s == ServiceInfo2);
 
-    private static readonly ServiceInfoFilter Service2Or3Filter = services =>
-        services.Where(s => s == ServiceInfo2 || s == ServiceInfo3).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service2Or3Filter =
+        services => services.Where(s => s == ServiceInfo2 || s == ServiceInfo3);
 
-    private static readonly ServiceInfoFilter Service3Filter = services =>
-        services.Where(s => s == ServiceInfo3).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service3Filter = services => services.Where(s => s == ServiceInfo3);
 
     private static readonly ServiceInfo ServiceInfo1 = new(typeof(IDictionary<,>), typeof(Dictionary<,>));
     private static readonly ServiceInfo ServiceInfo2 = new(typeof(IList<>), typeof(List<>));

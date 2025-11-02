@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Immutable;
 using GhostServiceBuster.Collections;
+using GhostServiceBuster.Detect;
 
 namespace GhostServiceBuster.Extract;
 
@@ -15,17 +18,47 @@ internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
     }
 
     public ServiceInfoSet GetServiceInfo<TServiceCollection>(TServiceCollection serviceCollection)
-        where TServiceCollection : notnull
     {
-        if (serviceCollection is ServiceInfoSet serviceInfoSet)
-            return serviceInfoSet;
+        switch (serviceCollection)
+        {
+            case null:
+                return [];
 
-        var serviceCollectionType = typeof(TServiceCollection);
-        _ = _serviceInfoExtractors.TryGetValue(serviceCollectionType, out var extractor);
+            case ServiceInfoSet serviceInfoSet:
+                return serviceInfoSet;
 
-        return extractor?.Invoke(serviceCollection)
-               ?? throw new InvalidOperationException(
-                   $"No service info extractor registered for {serviceCollectionType.FullName}.");
+            case IEnumerable<ServiceInfo> serviceInfoEnumerable:
+                return serviceInfoEnumerable.ToImmutableHashSet();
+        }
+
+        var collectionType = typeof(TServiceCollection);
+        var serviceCollectionType = serviceCollection is IEnumerable and not string
+            ? GetElementType(collectionType)
+            : collectionType;
+
+        var foundExtractor = _serviceInfoExtractors.TryGetValue(serviceCollectionType, out var extractor);
+        var extractorIsForEnumerable = false;
+        if (!foundExtractor && serviceCollection is IEnumerable)
+        {
+            foundExtractor = extractorIsForEnumerable =
+                _serviceInfoExtractors.TryGetValue(collectionType, out extractor);
+
+            if (!foundExtractor)
+            {
+                var serviceEnumerableType = typeof(IEnumerable<>).MakeGenericType(serviceCollectionType);
+                foundExtractor = extractorIsForEnumerable =
+                    _serviceInfoExtractors.TryGetValue(serviceEnumerableType, out extractor);
+            }
+        }
+
+        if (!foundExtractor || extractor is null)
+            throw new InvalidOperationException(
+                $"No service info extractor registered for {serviceCollectionType.FullName}.");
+
+        if (serviceCollection is not IEnumerable serviceCollectionAsEnumerable || extractorIsForEnumerable)
+            return extractor(serviceCollection);
+
+        return serviceCollectionAsEnumerable.Select(service => extractor(service!).First());
     }
 
     private bool TryAddNewServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
@@ -33,6 +66,24 @@ internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
     {
         return _serviceInfoExtractors.TryAdd(typeof(TServiceCollection),
             serviceCollection => extractor((TServiceCollection)serviceCollection));
+    }
+
+    private static Type GetElementType(Type type)
+    {
+        // Type is Array
+        if (type.IsArray)
+            return type.GetElementType()!;
+
+        // Type is IEnumerable<T>
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            return type.GetGenericArguments()[0];
+
+        // Type implements/extends IEnumerable<T>
+        return type.GetInterfaces()
+                   .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                   .Select(t => t.GenericTypeArguments[0]).FirstOrDefault()
+               // Type is not a Enumerable
+               ?? type;
     }
 
     private delegate ServiceInfoSet ServiceInfoExtractorInternal(object serviceCollection);

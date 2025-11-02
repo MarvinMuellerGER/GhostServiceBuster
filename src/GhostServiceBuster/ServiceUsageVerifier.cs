@@ -3,51 +3,95 @@ using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
 using GhostServiceBuster.Extract;
 using GhostServiceBuster.Filter;
+using Pure.DI;
+using static Pure.DI.Tag;
 
 namespace GhostServiceBuster;
 
-internal sealed class ServiceUsageVerifier(
+internal sealed partial class ServiceUsageVerifier(
     IUnusedServiceDetector unusedServiceDetector,
     IServiceInfoExtractorHandler serviceInfoExtractorHandler,
     IFilterHandler filterHandler,
-    IFilterCacheHandler allServicesFilterCacheHandler,
-    IFilterCacheHandler rootServicesFilterCacheHandler,
-    IFilterCacheHandler unusedServicesFilterCacheHandler) : IServiceUsageVerifier
+    [Tag(All)] IServiceCacheHandler allServicesCacheHandler,
+    [Tag(Root)] IServiceCacheHandler rootServicesCacheHandler,
+    [Tag(Unused)] IServiceCacheHandler unusedServicesCacheHandler,
+    [Tag(All)] IFilterCacheHandler allServicesFilterCacheHandler,
+    [Tag(Root)] IFilterCacheHandler rootServicesFilterCacheHandler,
+    [Tag(Unused)] IFilterCacheHandler unusedServicesFilterCacheHandler,
+    [Tag(All)] IServiceAndFilterCacheHandler allServicesAndFilterCacheHandler,
+    [Tag(Root)] IServiceAndFilterCacheHandler rootServicesAndFilterCacheHandler,
+    [Tag(Unused)] IServiceAndFilterCacheHandler unusedServicesAndFilterCacheHandler) : IServiceUsageVerifier
 {
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
-        IServiceInfoExtractor<TServiceCollection> extractor)
-        where TServiceCollection : notnull
-    {
-        serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
-
-        return this;
-    }
-
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
-        ServiceInfoExtractor<TServiceCollection> extractor)
-        where TServiceCollection : notnull
-    {
-        serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
-
-        return this;
-    }
-
-    public IServiceUsageVerifier RegisterFilters(ServiceInfoFilterInfoList? allServicesFilters = null,
-        ServiceInfoFilterInfoList? rootServicesFilters = null, ServiceInfoFilterInfoList? unusedServicesFilters = null)
-    {
-        if (allServicesFilters is not null)
-            allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
-
-        if (rootServicesFilters is not null)
-            rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
-
-        if (unusedServicesFilters is not null)
-            unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
-
-        return this;
-    }
-
     public IServiceUsageVerifier FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
+        out ServiceInfoSet unusedServices,
+        in TAllServicesCollection? oneTimeAllServices = default,
+        in TRootServicesCollection? oneTimeRootServices = default,
+        ServiceInfoFilterInfoList? oneTimeAllServicesFilters = null,
+        ServiceInfoFilterInfoList? oneTimeRootServicesFilters = null,
+        ServiceInfoFilterInfoList? oneTimeUnusedServicesFilters = null)
+        where TAllServicesCollection : notnull
+        where TRootServicesCollection : notnull
+    {
+        if (oneTimeAllServices is not null || oneTimeRootServices is not null ||
+            oneTimeAllServicesFilters is not null || oneTimeRootServicesFilters is not null ||
+            allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet ||
+            rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet)
+        {
+            var filteredAllServices =
+                allServicesAndFilterCacheHandler.GetFilteredServices(oneTimeAllServices, oneTimeAllServicesFilters);
+
+            var filteredRootServices =
+                rootServicesAndFilterCacheHandler.GetFilteredServices(oneTimeRootServices, oneTimeRootServicesFilters);
+
+            var unusedServicesUnfiltered =
+                unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
+
+            unusedServicesAndFilterCacheHandler.ClearAndRegisterServices(unusedServicesUnfiltered);
+        }
+
+        unusedServices = unusedServicesAndFilterCacheHandler.GetFilteredServices(oneTimeUnusedServicesFilters);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeFilters<
+        TAllServicesCollection, TRootServicesCollection>(
+        out ServiceInfoSet unusedServices,
+        in TAllServicesCollection? oneTimeAllServices = default,
+        in TRootServicesCollection? oneTimeRootServices = default,
+        ServiceInfoFilterInfoList? allServicesFilters = null,
+        ServiceInfoFilterInfoList? rootServicesFilters = null,
+        ServiceInfoFilterInfoList? unusedServicesFilters = null)
+        where TAllServicesCollection : notnull
+        where TRootServicesCollection : notnull
+    {
+        if (oneTimeAllServices is null && oneTimeRootServices is null &&
+            allServicesFilters is null && rootServicesFilters is null &&
+            !allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet &&
+            !rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet)
+        {
+            unusedServices =
+                filterHandler.ApplyFilters(unusedServicesCacheHandler.GetServices(), unusedServicesFilters);
+
+            return this;
+        }
+
+        var extractedAllServices = allServicesCacheHandler.GetServices(oneTimeAllServices);
+        var extractedRootServices = rootServicesCacheHandler.GetServices(oneTimeRootServices);
+
+        var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters);
+        var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters);
+
+        var unusedServicesUnfiltered =
+            unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
+
+        unusedServices = filterHandler.ApplyFilters(unusedServicesUnfiltered, unusedServicesFilters);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeServices<
+        TAllServicesCollection, TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         out ServiceInfoSet unusedServices,
@@ -62,19 +106,21 @@ internal sealed class ServiceUsageVerifier(
 
         var filteredAllServices =
             allServicesFilterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
+
         var filteredRootServices =
             rootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
 
         var unusedServicesUnfiltered =
             unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
+
         unusedServices =
             unusedServicesFilterCacheHandler.ApplyFilters(unusedServicesUnfiltered, oneTimeUnusedServicesFilters);
 
         return this;
     }
 
-    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeFilters<TAllServicesCollection,
-        TRootServicesCollection>(
+    public IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeServicesAndFilters<
+        TAllServicesCollection, TRootServicesCollection>(
         in TAllServicesCollection allServices,
         in TRootServicesCollection rootServices,
         out ServiceInfoSet unusedServices,
@@ -87,12 +133,13 @@ internal sealed class ServiceUsageVerifier(
         var extractedAllServices = serviceInfoExtractorHandler.GetServiceInfo(allServices);
         var extractedRootServices = serviceInfoExtractorHandler.GetServiceInfo(rootServices);
 
-        var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters ?? []);
-        var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters ?? []);
+        var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters);
+        var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters);
 
         var unusedServicesUnfiltered =
             unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
-        unusedServices = filterHandler.ApplyFilters(unusedServicesUnfiltered, unusedServicesFilters ?? []);
+
+        unusedServices = filterHandler.ApplyFilters(unusedServicesUnfiltered, unusedServicesFilters);
 
         return this;
     }

@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
@@ -14,11 +13,8 @@ public static class FilterCacheHandlerTests
 
     private static readonly ServiceInfoSet ServiceInfoSet = new(ServiceInfo1, ServiceInfo2);
 
-    private static readonly ServiceInfoFilter Service1Filter = services =>
-        services.Where(s => s == ServiceInfo1).ToImmutableHashSet();
-
-    private static readonly ServiceInfoFilter Service2Filter = services =>
-        services.Where(s => s == ServiceInfo2).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service1Filter = services => services.Where(s => s == ServiceInfo1);
+    private static readonly ServiceInfoFilter Service2Filter = services => services.Where(s => s == ServiceInfo2);
 
     public sealed class RegisterFilters
     {

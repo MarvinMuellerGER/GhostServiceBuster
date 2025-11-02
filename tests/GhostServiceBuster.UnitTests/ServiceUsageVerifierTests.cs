@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Immutable;
 using FluentAssertions;
 using GhostServiceBuster.Cache;
 using GhostServiceBuster.Collections;
@@ -20,15 +19,35 @@ public static class ServiceUsageVerifierTests
 
     private static readonly IFilterHandler FilterHandler = Substitute.For<IFilterHandler>();
 
+    private static readonly IServiceCacheHandler AllServicesCacheHandler =
+        Substitute.For<IServiceCacheHandler>();
+
+    private static readonly IServiceCacheHandler RootServicesCacheHandler =
+        Substitute.For<IServiceCacheHandler>();
+
+    private static readonly IServiceCacheHandler UnusedServicesCacheHandler =
+        Substitute.For<IServiceCacheHandler>();
+
     private static readonly IFilterCacheHandler AllServicesFilterCacheHandler = Substitute.For<IFilterCacheHandler>();
     private static readonly IFilterCacheHandler RootServicesFilterCacheHandler = Substitute.For<IFilterCacheHandler>();
 
     private static readonly IFilterCacheHandler UnusedServicesFilterCacheHandler
         = Substitute.For<IFilterCacheHandler>();
 
+    private static readonly IServiceAndFilterCacheHandler AllServicesAndFilterCacheHandler =
+        Substitute.For<IServiceAndFilterCacheHandler>();
+
+    private static readonly IServiceAndFilterCacheHandler RootServicesAndFilterCacheHandler =
+        Substitute.For<IServiceAndFilterCacheHandler>();
+
+    private static readonly IServiceAndFilterCacheHandler UnusedServicesAndFilterCacheHandler =
+        Substitute.For<IServiceAndFilterCacheHandler>();
+
     private static readonly IServiceUsageVerifier Verifier
         = new ServiceUsageVerifier(UnusedServiceDetector, ServiceInfoExtractorHandler, FilterHandler,
-            AllServicesFilterCacheHandler, RootServicesFilterCacheHandler, UnusedServicesFilterCacheHandler);
+            AllServicesCacheHandler, RootServicesCacheHandler, UnusedServicesCacheHandler,
+            AllServicesFilterCacheHandler, RootServicesFilterCacheHandler, UnusedServicesFilterCacheHandler,
+            AllServicesAndFilterCacheHandler, RootServicesAndFilterCacheHandler, UnusedServicesAndFilterCacheHandler);
 
     private static readonly ServiceInfo ServiceInfo1 = new(typeof(IService1), typeof(Service1));
     private static readonly ServiceInfo ServiceInfo2 = new(typeof(IService2), typeof(Service2));
@@ -36,17 +55,19 @@ public static class ServiceUsageVerifierTests
 
     private static readonly ServiceInfoSet ServiceInfoSet = new(ServiceInfo1, ServiceInfo2, ServiceInfo3);
 
-    private static readonly ServiceInfoFilter Service1Filter = services =>
-        services.Where(s => s == ServiceInfo1).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service1Filter = services => services.Where(s => s == ServiceInfo1);
 
-    private static readonly ServiceInfoFilter Service1Or2Filter = services =>
-        services.Where(s => s == ServiceInfo1 || s == ServiceInfo2).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service1Or2Filter =
+        services => services.Where(s => s == ServiceInfo1 || s == ServiceInfo2);
 
-    private static readonly ServiceInfoFilter Service2Filter = services =>
-        services.Where(s => s == ServiceInfo2).ToImmutableHashSet();
+    private static readonly ServiceInfoFilter Service2Filter = services => services.Where(s => s == ServiceInfo2);
 
     static ServiceUsageVerifierTests()
     {
+        FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
+            .Returns(args => args.ArgAt<ServiceInfoSet>(0));
+
+
         AllServicesFilterCacheHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
             .Returns(args => args.ArgAt<ServiceInfoSet>(0));
 
@@ -54,6 +75,19 @@ public static class ServiceUsageVerifierTests
             .Returns(args => args.ArgAt<ServiceInfoSet>(0));
 
         UnusedServicesFilterCacheHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
+            .Returns(args => args.ArgAt<ServiceInfoSet>(0));
+
+
+        AllServicesAndFilterCacheHandler
+            .GetFilteredServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
+            .Returns(args => args.ArgAt<ServiceInfoSet>(0));
+
+        RootServicesAndFilterCacheHandler
+            .GetFilteredServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
+            .Returns(args => args.ArgAt<ServiceInfoSet>(0));
+
+        UnusedServicesAndFilterCacheHandler
+            .GetFilteredServices(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
             .Returns(args => args.ArgAt<ServiceInfoSet>(0));
     }
 
@@ -73,7 +107,7 @@ public static class ServiceUsageVerifierTests
         }
     }
 
-    public sealed class GetIndividualUnusedServices
+    public sealed class FindUnusedServicesUsingOnlyOneTimeFilters
     {
         [Fact]
         public void WithDifferentCollectionTypes_WorksCorrectly()
@@ -89,14 +123,11 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
-                .Returns(args => args.ArgAt<ServiceInfoSet>(0));
-
             UnusedServiceDetector.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeServicesAndFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -120,14 +151,11 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
-                .Returns(args => args.ArgAt<ServiceInfoSet>(0));
-
             UnusedServiceDetector.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(unusedServices);
 
             // Act
-            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeServicesAndFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -151,14 +179,11 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            FilterHandler.ApplyFilters(Arg.Any<ServiceInfoSet>(), Arg.Any<ServiceInfoFilterInfoList>())
-                .Returns(args => args.ArgAt<ServiceInfoSet>(0));
-
             UnusedServiceDetector.FindUnusedServices(extractedAllServices, extractedRootServices)
                 .Returns(new ServiceInfoSet([ServiceInfo1]));
 
             // Act
-            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(allServices, rootServices);
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeServicesAndFilters(allServices, rootServices);
 
             // Assert
             ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
@@ -197,7 +222,6 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            // Simuliere das Verhalten des FilterHandlers
             FilterHandler.ApplyFilters(extractedAllServices, allServicesFilters).Returns(extractedAllServices);
             FilterHandler.ApplyFilters(extractedRootServices, rootServicesFilters).Returns(extractedRootServices);
 
@@ -207,7 +231,7 @@ public static class ServiceUsageVerifierTests
             FilterHandler.ApplyFilters(unusedServices, unusedServicesFilters).Returns(unusedServices);
 
             // Act
-            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeServicesAndFilters(
                 allServices,
                 rootServices,
                 allServicesFilters,
@@ -251,7 +275,7 @@ public static class ServiceUsageVerifierTests
                 .Returns([]);
 
             // Act
-            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeFilters(
+            var result = Verifier.FindUnusedServicesUsingOnlyOneTimeServicesAndFilters(
                 services,
                 services,
                 allServicesFilters,
@@ -328,24 +352,28 @@ public static class ServiceUsageVerifierTests
         public void CallsExtractorForBothCollections()
         {
             // Arrange
-            var allServices = new List<string> { "Service1" };
+            var allServices = new List<string> { "Service1", "Service2" };
             var rootServices = new List<string> { "Service2" };
 
             var extractedAllServices = new ServiceInfoSet([ServiceInfo1, ServiceInfo2]);
             var extractedRootServices = new ServiceInfoSet([ServiceInfo2]);
+            var unusedServices = new ServiceInfoSet([ServiceInfo1]);
 
-            ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
-            ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
+            AllServicesAndFilterCacheHandler.GetFilteredServices(allServices).Returns(extractedAllServices);
+            RootServicesAndFilterCacheHandler.GetFilteredServices(rootServices).Returns(extractedRootServices);
 
             UnusedServiceDetector.FindUnusedServices(extractedAllServices, extractedRootServices)
-                .Returns(new ServiceInfoSet([ServiceInfo1]));
+                .Returns(unusedServices);
+
+            UnusedServicesAndFilterCacheHandler.GetFilteredServices().Returns(unusedServices);
 
             // Act
             var result = Verifier.FindUnusedServices(allServices, rootServices);
 
             // Assert
-            ServiceInfoExtractorHandler.Received(1).GetServiceInfo(allServices);
-            ServiceInfoExtractorHandler.Received(1).GetServiceInfo(rootServices);
+            AllServicesAndFilterCacheHandler.Received(1).GetFilteredServices(allServices);
+            RootServicesAndFilterCacheHandler.Received(1).GetFilteredServices(rootServices);
+            UnusedServicesAndFilterCacheHandler.Received(1).ClearAndRegisterServices(unusedServices);
             result.Should().HaveCount(1);
             result.Should().Contain(ServiceInfo1);
         }
@@ -380,7 +408,6 @@ public static class ServiceUsageVerifierTests
             ServiceInfoExtractorHandler.GetServiceInfo(allServices).Returns(extractedAllServices);
             ServiceInfoExtractorHandler.GetServiceInfo(rootServices).Returns(extractedRootServices);
 
-            // Simuliere das Verhalten des FilterHandlers
             AllServicesFilterCacheHandler.ApplyFilters(extractedAllServices, allServicesFilters)
                 .Returns(extractedAllServices);
             RootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, rootServicesFilters)

@@ -1,15 +1,13 @@
-using System.Collections.Immutable;
 using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Filter;
 
 internal sealed class FilterHandler : IFilterHandler
 {
-    public ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList filters) =>
-        filters.Count is 0
+    public ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList? filters) =>
+        filters is null || filters.Count is 0
             ? serviceInfo
-            : ApplyNonIndividualFilters(serviceInfo, filters)
-                .Concat(ApplyIndividualFilters(serviceInfo, filters)).ToImmutableHashSet();
+            : ApplyNonIndividualFilters(serviceInfo, filters).Concat(ApplyIndividualFilters(serviceInfo, filters));
 
     private static ServiceInfoSet ApplyNonIndividualFilters(
         ServiceInfoSet serviceInfo, IReadOnlyList<ServiceInfoFilterInfo> filters) =>
@@ -21,6 +19,5 @@ internal sealed class FilterHandler : IFilterHandler
 
     private static ServiceInfoSet ApplyIndividualFilters(
         ServiceInfoSet serviceInfo, IEnumerable<ServiceInfoFilterInfo> filters) =>
-        filters.Where(filter => filter.IsIndividual).SelectMany(filter => filter.Filter.Invoke(serviceInfo))
-            .ToImmutableHashSet();
+        filters.Where(filter => filter.IsIndividual).SelectMany(filter => filter.Filter.Invoke(serviceInfo));
 }

@@ -8,4 +8,6 @@ internal interface IFilterCacheHandler : IFilterHandler
     void RegisterFilters(ServiceInfoFilterInfoList filters);
 
     new ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList? oneTimeFilters = null);
+
+    event EventHandlerWithoutParameters NewFiltersRegistered;
 }
