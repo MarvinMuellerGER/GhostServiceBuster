@@ -1,10 +1,14 @@
+using System.Diagnostics.CodeAnalysis;
 using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Detect;
 
+[SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance.")]
 internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjectionDetector)
     : IUnusedServiceDetector
 {
+    private readonly List<IDependencyDetector> _dependencyDetectors = [constructorInjectionDetector];
+
     /// <summary>
     ///     Identifies services that are not used in the dependency tree starting from root services.
     /// </summary>
@@ -23,7 +27,7 @@ internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjec
         IReadOnlyList<ServiceInfo> foundDependencies;
         do
         {
-            foundDependencies = constructorInjectionDetector.FindDirectDependencies(usedServices, unusedCandidates);
+            foundDependencies = FindDirectDependencies(usedServices, unusedCandidates);
             MoveDependenciesToUsed(usedServices, unusedCandidates, foundDependencies);
         } while (foundDependencies.Count > 0);
     }
@@ -36,4 +40,13 @@ internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjec
         usedServices.AddRange(foundDependencies);
         unusedCandidates.RemoveAll(foundDependencies.Contains);
     }
+
+    private IReadOnlyList<ServiceInfo> FindDirectDependencies(
+        IReadOnlyList<ServiceInfo> servicesToAnalyse, IReadOnlyList<ServiceInfo> potentialDependencies) =>
+        potentialDependencies.Except(
+                _dependencyDetectors.Aggregate(potentialDependencies,
+                    (remainingPotentialDependencies, detector) => remainingPotentialDependencies
+                        .Except(detector.FindDirectDependencies(servicesToAnalyse, remainingPotentialDependencies))
+                        .ToList()))
+            .ToList();
 }
