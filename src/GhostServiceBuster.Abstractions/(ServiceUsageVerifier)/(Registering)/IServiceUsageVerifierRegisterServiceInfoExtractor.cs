@@ -13,10 +13,10 @@ public interface IServiceUsageVerifierRegisterServiceInfoExtractor
         where TServiceCollection : notnull;
 
     IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
-        Func<TServiceCollection, ServiceInfoTuple> extractor)
+        ServiceInfoTupleExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;
 
     IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollectionItem>(
-        ServiceInfoExtractor<IEnumerable<TServiceCollectionItem>> extractor)
+        EnumerableServiceInfoExtractor<TServiceCollectionItem> extractor)
         where TServiceCollectionItem : notnull;
 }

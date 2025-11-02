@@ -7,7 +7,7 @@ namespace GhostServiceBuster.UnitTests.Detect;
 
 public static class UnusedServiceDetectorTests
 {
-    private static readonly UnusedServiceDetector UnusedServiceDetector = new(new ConstructorInjectionDetector());
+    private static readonly UnusedServiceDetector UnusedServiceDetector = new();
 
     public sealed class FindUnusedServices
     {

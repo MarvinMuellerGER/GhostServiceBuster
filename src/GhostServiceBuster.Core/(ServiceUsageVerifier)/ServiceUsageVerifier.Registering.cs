@@ -1,4 +1,5 @@
 using GhostServiceBuster.Collections;
+using GhostServiceBuster.Detect;
 using GhostServiceBuster.Extract;
 
 namespace GhostServiceBuster;
@@ -23,8 +24,8 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier
-        RegisterServiceInfoExtractor<TServiceCollection>(Func<TServiceCollection, ServiceInfoTuple> extractor)
+    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+        ServiceInfoTupleExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {
         serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
@@ -33,10 +34,31 @@ internal sealed partial class ServiceUsageVerifier
     }
 
     public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollectionItem>(
-        ServiceInfoExtractor<IEnumerable<TServiceCollectionItem>> extractor)
+        EnumerableServiceInfoExtractor<TServiceCollectionItem> extractor)
         where TServiceCollectionItem : notnull
     {
         serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
+
+        return this;
+    }
+    
+    public IServiceUsageVerifier RegisterDependencyDetector(DependencyDetector dependencyDetector)
+    {
+        unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterDependencyDetector(IDependencyDetector dependencyDetector)
+    {
+        unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterDependencyDetector(DependencyDetectorTupleResult dependencyDetector)
+    {
+        unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
 
         return this;
     }

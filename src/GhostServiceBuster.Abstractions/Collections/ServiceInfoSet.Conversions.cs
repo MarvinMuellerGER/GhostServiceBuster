@@ -11,4 +11,7 @@ partial class ServiceInfoSet
 
     public static implicit operator ServiceInfoSet(ServiceInfo? serviceInfo) =>
         serviceInfo is null ? Empty : [serviceInfo];
+
+    public static implicit operator ServiceInfoSet(ServiceInfoTuple? serviceInfoTuple) =>
+        serviceInfoTuple.HasValue ? new ServiceInfo(serviceInfoTuple.Value) : [];
 }

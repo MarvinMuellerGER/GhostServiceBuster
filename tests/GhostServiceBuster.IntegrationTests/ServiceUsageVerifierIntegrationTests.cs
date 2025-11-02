@@ -1,15 +1,12 @@
 using GhostServiceBuster.Collections;
+using GhostServiceBuster.Default;
 using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster.IntegrationTests;
 
 public static class ServiceUsageVerifierIntegrationTests
 {
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = Verify.New;
-
-    static ServiceUsageVerifierIntegrationTests() =>
-        ServiceUsageVerifier.RegisterServiceInfoExtractor<Type>(t =>
-            (t.IsInterface ? t : t.GetInterfaces().FirstOrDefault() ?? t, t));
+    private static readonly IServiceUsageVerifier ServiceUsageVerifier = Verify.New.Default();
 
     public sealed class FindUnusedServicesUsingOnlyOneTimeFilters
     {

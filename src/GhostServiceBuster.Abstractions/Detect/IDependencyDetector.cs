@@ -1,3 +1,5 @@
+using GhostServiceBuster.Collections;
+
 namespace GhostServiceBuster.Detect;
 
 public interface IDependencyDetector
@@ -5,6 +7,5 @@ public interface IDependencyDetector
     /// <summary>
     ///     Finds services from the source list that are injected into any service in the target list.
     /// </summary>
-    IReadOnlyList<ServiceInfo> FindDirectDependencies(
-        IReadOnlyList<ServiceInfo> servicesToAnalyse, IReadOnlyList<ServiceInfo> potentialDependencies);
+    ServiceInfoSet FindDirectDependencies(ServiceInfoSet servicesToAnalyse, ServiceInfoSet potentialDependencies);
 }

@@ -4,10 +4,12 @@ using GhostServiceBuster.Collections;
 namespace GhostServiceBuster.Detect;
 
 [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance.")]
-internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjectionDetector)
-    : IUnusedServiceDetector
+internal sealed class UnusedServiceDetector : IUnusedServiceDetector
 {
-    private readonly List<IDependencyDetector> _dependencyDetectors = [constructorInjectionDetector];
+    private readonly List<DependencyDetector> _dependencyDetectors = [];
+
+    public void RegisterDependencyDetector(DependencyDetector dependencyDetector) =>
+        _dependencyDetectors.Add(dependencyDetector);
 
     /// <summary>
     ///     Identifies services that are not used in the dependency tree starting from root services.
@@ -24,7 +26,7 @@ internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjec
 
     private void DiscoverDependencyChain(List<ServiceInfo> usedServices, List<ServiceInfo> unusedCandidates)
     {
-        IReadOnlyList<ServiceInfo> foundDependencies;
+        ServiceInfoSet foundDependencies;
         do
         {
             foundDependencies = FindDirectDependencies(usedServices, unusedCandidates);
@@ -35,18 +37,17 @@ internal sealed class UnusedServiceDetector(IDependencyDetector constructorInjec
     private static void MoveDependenciesToUsed(
         List<ServiceInfo> usedServices,
         List<ServiceInfo> unusedCandidates,
-        IReadOnlyList<ServiceInfo> foundDependencies)
+        ServiceInfoSet foundDependencies)
     {
         usedServices.AddRange(foundDependencies);
         unusedCandidates.RemoveAll(foundDependencies.Contains);
     }
 
-    private IReadOnlyList<ServiceInfo> FindDirectDependencies(
-        IReadOnlyList<ServiceInfo> servicesToAnalyse, IReadOnlyList<ServiceInfo> potentialDependencies) =>
+    private ServiceInfoSet FindDirectDependencies(
+        ServiceInfoSet servicesToAnalyse, ServiceInfoSet potentialDependencies) =>
         potentialDependencies.Except(
-                _dependencyDetectors.Aggregate(potentialDependencies,
-                    (remainingPotentialDependencies, detector) => remainingPotentialDependencies
-                        .Except(detector.FindDirectDependencies(servicesToAnalyse, remainingPotentialDependencies))
-                        .ToList()))
-            .ToList();
+            _dependencyDetectors.Aggregate(potentialDependencies,
+                (remainingPotentialDependencies, dependencyDetector) => remainingPotentialDependencies
+                    .Except(dependencyDetector(servicesToAnalyse, remainingPotentialDependencies))
+                    .ToList()));
 }
