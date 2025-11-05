@@ -5,10 +5,10 @@ namespace GhostServiceBuster.Cache;
 internal sealed class ServiceAndFilterCacheHandler : IServiceAndFilterCacheHandler
 {
     private readonly IFilterCacheHandler _filterCacheHandler;
-    private readonly IServiceCacheHandler _serviceCacheHandler;
 
     private bool _newFiltersRegisteredSinceLastGet;
     private bool _newServicesRegisteredSinceLastGet;
+    private IServiceCacheHandler _serviceCacheHandler;
     private ServiceInfoSet? _servicesFiltered = [];
 
     public ServiceAndFilterCacheHandler(
@@ -17,12 +17,19 @@ internal sealed class ServiceAndFilterCacheHandler : IServiceAndFilterCacheHandl
         _serviceCacheHandler = serviceCacheHandler;
         _filterCacheHandler = filterCacheHandler;
 
-        _serviceCacheHandler.NewServicesRegistered += () => _newServicesRegisteredSinceLastGet = true;
-        _filterCacheHandler.NewFiltersRegistered += () => _newFiltersRegisteredSinceLastGet = true;
+        _serviceCacheHandler.NewServicesRegistered += OnNewServicesRegistered;
+        _filterCacheHandler.NewFiltersRegistered += OnFiltersServicesRegistered;
     }
 
     public bool NewServicesOrFiltersRegisteredSinceLastGet =>
         _newFiltersRegisteredSinceLastGet || _newServicesRegisteredSinceLastGet;
+
+    public void ReplaceServiceCacheHandler(IServiceCacheHandler serviceCacheHandler)
+    {
+        serviceCacheHandler.NewServicesRegistered += OnNewServicesRegistered;
+        _serviceCacheHandler.NewServicesRegistered -= OnNewServicesRegistered;
+        _serviceCacheHandler = serviceCacheHandler;
+    }
 
     public void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
         where TServiceCollection : notnull =>
@@ -52,4 +59,8 @@ internal sealed class ServiceAndFilterCacheHandler : IServiceAndFilterCacheHandl
 
         return servicesFiltered;
     }
+
+    private void OnNewServicesRegistered() => _newServicesRegisteredSinceLastGet = true;
+
+    private void OnFiltersServicesRegistered() => _newFiltersRegisteredSinceLastGet = true;
 }

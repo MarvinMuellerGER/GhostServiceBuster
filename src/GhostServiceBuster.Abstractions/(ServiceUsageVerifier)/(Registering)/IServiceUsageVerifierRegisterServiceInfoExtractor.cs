@@ -8,6 +8,10 @@ public interface IServiceUsageVerifierRegisterServiceInfoExtractor
         IServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;
 
+    IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>()
+        where TServiceInfoExtractor : IServiceInfoExtractor<TServiceCollection>, new()
+        where TServiceCollection : notnull;
+
     IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
         ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull;

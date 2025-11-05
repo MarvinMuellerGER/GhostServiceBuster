@@ -6,14 +6,9 @@ using GhostServiceBuster.Filter;
 namespace GhostServiceBuster.Collections;
 
 [CollectionBuilder(typeof(ServiceInfoFilterInfoList), nameof(Create))]
-public sealed partial class ServiceInfoFilterInfoList(IImmutableList<ServiceInfoFilterInfo> list)
+public sealed partial class ServiceInfoFilterInfoList(params IImmutableList<ServiceInfoFilterInfo> list)
     : IImmutableList<ServiceInfoFilterInfo>
 {
-    public ServiceInfoFilterInfoList(ServiceInfoFilterInfo first, params IImmutableList<ServiceInfoFilterInfo> list)
-        : this(list.Prepend(first).ToImmutableList())
-    {
-    }
-
     public static ServiceInfoFilterInfoList Empty => new([]);
 
     public int Count => list.Count;

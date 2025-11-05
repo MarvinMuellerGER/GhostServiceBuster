@@ -7,11 +7,19 @@ public interface IServiceUsageVerifierRegisterServices
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull;
 
-    IServiceUsageVerifier RegisterAllServices<TAllServicesCollection>(TAllServicesCollection allServices)
-        where TAllServicesCollection : notnull =>
-        RegisterServices<TAllServicesCollection, object>(allServices);
+    IServiceUsageVerifier RegisterAllServices<TAllServicesCollection>(
+        TAllServicesCollection allServices, bool useAsRootServicesToo = false)
+        where TAllServicesCollection : notnull
+    {
+        if (useAsRootServicesToo)
+            UseAllServicesAsRootServices();
+
+        return RegisterServices<TAllServicesCollection, object>(allServices);
+    }
 
     IServiceUsageVerifier RegisterRootServices<TRootServicesCollection>(TRootServicesCollection rootServices)
         where TRootServicesCollection : notnull =>
         RegisterServices<object, TRootServicesCollection>(rootServices: rootServices);
+
+    IServiceUsageVerifier UseAllServicesAsRootServices();
 }

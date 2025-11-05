@@ -1,6 +1,7 @@
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
 using GhostServiceBuster.Extract;
+using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster;
 
@@ -11,6 +12,15 @@ internal sealed partial class ServiceUsageVerifier
         where TServiceCollection : notnull
     {
         serviceInfoExtractorHandler.RegisterServiceInfoExtractor(extractor);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>()
+        where TServiceInfoExtractor : IServiceInfoExtractor<TServiceCollection>, new()
+        where TServiceCollection : notnull
+    {
+        serviceInfoExtractorHandler.RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>();
 
         return this;
     }
@@ -41,7 +51,7 @@ internal sealed partial class ServiceUsageVerifier
 
         return this;
     }
-    
+
     public IServiceUsageVerifier RegisterDependencyDetector(DependencyDetector dependencyDetector)
     {
         unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
@@ -64,9 +74,9 @@ internal sealed partial class ServiceUsageVerifier
     }
 
     public IServiceUsageVerifier RegisterFilters(
-        ServiceInfoFilterInfoList? allServicesFilters = null,
-        ServiceInfoFilterInfoList? rootServicesFilters = null,
-        ServiceInfoFilterInfoList? unusedServicesFilters = null)
+        ServiceInfoFilterInfoList? allServicesFilters,
+        ServiceInfoFilterInfoList? rootServicesFilters,
+        ServiceInfoFilterInfoList? unusedServicesFilters)
     {
         if (allServicesFilters is not null)
             allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
@@ -80,9 +90,50 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
+    public IServiceUsageVerifier RegisterFilters(
+        IReadOnlyList<IServiceInfoFilter>? allServicesFilters,
+        IReadOnlyList<IServiceInfoFilter>? rootServicesFilters,
+        IReadOnlyList<IServiceInfoFilter>? unusedServicesFilters)
+    {
+        if (allServicesFilters is not null)
+            allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
+
+        if (rootServicesFilters is not null)
+            rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
+
+        if (unusedServicesFilters is not null)
+            unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterAllServicesFilter<TServiceInfoFilter>()
+        where TServiceInfoFilter : IServiceInfoFilter, new()
+    {
+        allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterRootServicesFilter<TServiceInfoFilter>()
+        where TServiceInfoFilter : IServiceInfoFilter, new()
+    {
+        allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
+
+        return this;
+    }
+
+    public IServiceUsageVerifier RegisterUnusedServicesFilter<TServiceInfoFilter>()
+        where TServiceInfoFilter : IServiceInfoFilter, new()
+    {
+        allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
+
+        return this;
+    }
+
     public IServiceUsageVerifier RegisterServices<TAllServicesCollection, TRootServicesCollection>(
-        TAllServicesCollection? allServices = default,
-        TRootServicesCollection? rootServices = default)
+        TAllServicesCollection? allServices,
+        TRootServicesCollection? rootServices)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
@@ -92,6 +143,14 @@ internal sealed partial class ServiceUsageVerifier
         if (rootServices is not null)
             rootServicesAndFilterCacheHandler.RegisterServices(rootServices);
 
+        return this;
+    }
+
+    public IServiceUsageVerifier UseAllServicesAsRootServices()
+    {
+        _useAllServicesAsRootServices = true;
+        rootServicesAndFilterCacheHandler.ReplaceServiceCacheHandler(allServicesCacheHandler);
+        
         return this;
     }
 }

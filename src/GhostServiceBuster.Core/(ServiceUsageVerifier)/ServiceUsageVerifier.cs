@@ -22,6 +22,8 @@ internal sealed partial class ServiceUsageVerifier(
     [Tag(Root)] IServiceAndFilterCacheHandler rootServicesAndFilterCacheHandler,
     [Tag(Unused)] IServiceAndFilterCacheHandler unusedServicesAndFilterCacheHandler) : IServiceUsageVerifier
 {
+    private bool _useAllServicesAsRootServices;
+
     public IServiceUsageVerifier FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
         out ServiceInfoSet unusedServices,
         in TAllServicesCollection? oneTimeAllServices = default,
@@ -77,7 +79,9 @@ internal sealed partial class ServiceUsageVerifier(
         }
 
         var extractedAllServices = allServicesCacheHandler.GetServices(oneTimeAllServices);
-        var extractedRootServices = rootServicesCacheHandler.GetServices(oneTimeRootServices);
+        var extractedRootServices = _useAllServicesAsRootServices
+            ? extractedAllServices
+            : rootServicesCacheHandler.GetServices(oneTimeRootServices);
 
         var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters);
         var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters);

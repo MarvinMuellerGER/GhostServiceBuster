@@ -12,6 +12,11 @@ internal interface IServiceInfoExtractorHandler
         where TServiceCollection : notnull =>
         RegisterServiceInfoExtractor<TServiceCollection>(extractor.ExtractServiceInfos);
 
+    void RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>()
+        where TServiceInfoExtractor : IServiceInfoExtractor<TServiceCollection>, new()
+        where TServiceCollection : notnull =>
+        RegisterServiceInfoExtractor(new TServiceInfoExtractor());
+
     void RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoTupleExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull =>
         RegisterServiceInfoExtractor(new ServiceInfoExtractor<TServiceCollection>(serviceCollection =>

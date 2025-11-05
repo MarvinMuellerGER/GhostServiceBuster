@@ -6,6 +6,8 @@ internal interface IServiceAndFilterCacheHandler
 {
     bool NewServicesOrFiltersRegisteredSinceLastGet { get; }
 
+    void ReplaceServiceCacheHandler(IServiceCacheHandler serviceCacheHandler);
+
     void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
         where TServiceCollection : notnull;
 

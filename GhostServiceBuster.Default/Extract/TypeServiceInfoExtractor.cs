@@ -13,5 +13,5 @@ public static class ServiceUsageVerifierExtensions
 {
     public static IServiceUsageVerifier RegisterTypeServiceInfoExtractor(
         this IServiceUsageVerifier serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterServiceInfoExtractor(new TypeServiceInfoExtractor());
+        serviceUsageVerifier.RegisterServiceInfoExtractor<TypeServiceInfoExtractor, Type>();
 }
