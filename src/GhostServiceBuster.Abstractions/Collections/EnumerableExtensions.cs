@@ -18,14 +18,6 @@ public static class EnumerableExtensions
     public static ServiceInfoSet Select(this IEnumerable source, Func<object?, ServiceInfo> selector) =>
         Select<ServiceInfo>(source, selector).ToImmutableHashSet();
 
-    public static ServiceInfoSet Select<TSource>(
-        this IEnumerable<TSource> source, Func<TSource, int, ServiceInfo> selector) =>
-        Enumerable.Select(source, selector).ToImmutableHashSet();
-
-    public static ServiceInfoSet SelectMany<TSource>(
-        this IEnumerable<TSource> source, Func<TSource, IEnumerable<ServiceInfo>> selector) =>
-        Enumerable.SelectMany(source, selector).ToImmutableHashSet();
-
     public static ServiceInfoFilterInfoList Concat(
         this IEnumerable<ServiceInfoFilterInfo> first, IEnumerable<ServiceInfoFilterInfo>? second) =>
         Enumerable.Concat(first, second ?? []).ToImmutableList();
@@ -36,5 +28,14 @@ public static class EnumerableExtensions
         // Necessary as it would result in unwanted recursion because Linq would use this method for selection
         foreach (var item in source)
             yield return selector(item);
+    }
+
+    extension<TSource>(IEnumerable<TSource> source)
+    {
+        public ServiceInfoSet Select(Func<TSource, int, ServiceInfo> selector) =>
+            Enumerable.Select(source, selector).ToImmutableHashSet();
+
+        public ServiceInfoSet SelectMany(Func<TSource, IEnumerable<ServiceInfo>> selector) =>
+            Enumerable.SelectMany(source, selector).ToImmutableHashSet();
     }
 }
