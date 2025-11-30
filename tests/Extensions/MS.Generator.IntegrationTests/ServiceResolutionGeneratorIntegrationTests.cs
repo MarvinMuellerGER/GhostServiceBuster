@@ -3,7 +3,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GhostServiceBuster.MS.Generator.Tests;
+namespace GhostServiceBuster.MS.Generator.IntegrationTests;
 
 public sealed class ServiceResolutionGeneratorIntegrationTests
 {
