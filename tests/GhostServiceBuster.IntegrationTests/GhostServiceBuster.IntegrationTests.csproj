@@ -27,9 +27,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\GhostServiceBuster.Default\GhostServiceBuster.Default.csproj" />
-        <ProjectReference Include="..\..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
         <ProjectReference Include="..\..\src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
+        <ProjectReference Include="..\..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\Extensions\GhostServiceBuster.Default\GhostServiceBuster.Default.csproj" />
     </ItemGroup>
 
 </Project>

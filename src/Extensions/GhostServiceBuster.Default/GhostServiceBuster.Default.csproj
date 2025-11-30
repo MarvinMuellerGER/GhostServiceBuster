@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+      <ProjectReference Include="..\..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

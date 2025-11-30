@@ -13,8 +13,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\GhostServiceBuster.MS\GhostServiceBuster.MS.csproj" />
-      <ProjectReference Include="..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
-      <ProjectReference Include="..\src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
+      <ProjectReference Include="..\..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+      <ProjectReference Include="..\..\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
     </ItemGroup>
 
 </Project>

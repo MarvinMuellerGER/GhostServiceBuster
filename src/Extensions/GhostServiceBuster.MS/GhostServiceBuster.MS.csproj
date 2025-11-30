@@ -9,8 +9,8 @@
     <ItemGroup>
       <ProjectReference Include="..\GhostServiceBuster.Default\GhostServiceBuster.Default.csproj" />
       <ProjectReference Include="..\GhostServiceBuster.MS.Generator.Attributes\GhostServiceBuster.MS.Generator.Attributes.csproj" />
-      <ProjectReference Include="..\src\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
-      <ProjectReference Include="..\src\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
+      <ProjectReference Include="..\..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+      <ProjectReference Include="..\..\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
