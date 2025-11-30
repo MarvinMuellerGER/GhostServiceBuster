@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>GhostServiceBuster</RootNamespace>
+        <AssemblyName>GhostServiceBuster.Core</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,11 +21,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+      <ProjectReference Include="..\Abstractions\Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="..\GhostServiceBuster.Abstractions\Detect\ServiceInfoTuple.cs">
+      <Compile Include="..\Abstractions\Detect\ServiceInfoTuple.cs">
         <Link>Extract\ServiceInfoTuple.cs</Link>
       </Compile>
     </ItemGroup>

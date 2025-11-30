@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>GhostServiceBuster.MS.Generator</RootNamespace>
         <LangVersion>default</LangVersion>
+        <AssemblyName>GhostServiceBuster.MS.Generator.Attributes</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

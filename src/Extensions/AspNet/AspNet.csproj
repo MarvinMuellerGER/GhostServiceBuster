@@ -5,6 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
+        <RootNamespace>GhostServiceBuster.AspNet</RootNamespace>
+        <AssemblyName>GhostServiceBuster.AspNet</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,9 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GhostServiceBuster.MS\GhostServiceBuster.MS.csproj" />
-      <ProjectReference Include="..\..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
-      <ProjectReference Include="..\..\GhostServiceBuster.Core\GhostServiceBuster.Core.csproj" />
+      <ProjectReference Include="..\MS\MS.csproj" />
+      <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
+      <ProjectReference Include="..\..\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -4,10 +4,12 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>GhostServiceBuster.Default</RootNamespace>
+        <AssemblyName>GhostServiceBuster.Default</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GhostServiceBuster.Abstractions\GhostServiceBuster.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

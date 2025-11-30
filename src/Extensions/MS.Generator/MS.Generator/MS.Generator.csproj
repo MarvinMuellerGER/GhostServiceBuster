@@ -10,8 +10,9 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <RootNamespace>GhostServiceBuster.MS.Generator</RootNamespace>
-        <PackageId>GhostServiceBuster.MS.Generator</PackageId>
+        <PackageId>MS.Generator</PackageId>
         <Version>0.1.0</Version>
+        <AssemblyName>GhostServiceBuster.MS.Generator</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GhostServiceBuster.MS.Generator.Attributes\GhostServiceBuster.MS.Generator.Attributes.csproj" />
+      <ProjectReference Include="..\..\MS.Generator.Attributes\MS.Generator.Attributes.csproj" />
     </ItemGroup>
 
 
