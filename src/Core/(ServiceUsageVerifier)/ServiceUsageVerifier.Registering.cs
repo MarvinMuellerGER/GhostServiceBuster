@@ -118,7 +118,7 @@ internal sealed partial class ServiceUsageVerifier
     public IServiceUsageVerifier RegisterRootServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new()
     {
-        allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
+        rootServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
 
         return this;
     }
@@ -126,7 +126,7 @@ internal sealed partial class ServiceUsageVerifier
     public IServiceUsageVerifier RegisterUnusedServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new()
     {
-        allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
+        unusedServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
 
         return this;
     }
