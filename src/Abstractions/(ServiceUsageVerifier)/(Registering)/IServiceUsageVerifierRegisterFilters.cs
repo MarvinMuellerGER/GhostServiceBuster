@@ -10,7 +10,7 @@ public interface IServiceUsageVerifierRegisterFilters
         ServiceInfoFilterInfoList? rootServicesFilters = null,
         ServiceInfoFilterInfoList? unusedServicesFilters = null);
 
-    IServiceUsageVerifier RegisterFilters(
+    protected internal IServiceUsageVerifier RegisterFilters(
         IReadOnlyList<IServiceInfoFilter>? allServicesFilters = null,
         IReadOnlyList<IServiceInfoFilter>? rootServicesFilters = null,
         IReadOnlyList<IServiceInfoFilter>? unusedServicesFilters = null);

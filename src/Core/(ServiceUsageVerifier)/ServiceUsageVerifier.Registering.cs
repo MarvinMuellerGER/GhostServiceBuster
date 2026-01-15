@@ -90,7 +90,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterFilters(
+    IServiceUsageVerifier IServiceUsageVerifierRegisterFilters.RegisterFilters(
         IReadOnlyList<IServiceInfoFilter>? allServicesFilters,
         IReadOnlyList<IServiceInfoFilter>? rootServicesFilters,
         IReadOnlyList<IServiceInfoFilter>? unusedServicesFilters)
@@ -146,11 +146,26 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
+    public IServiceUsageVerifier LazyRegisterServices<TAllServicesCollection, TRootServicesCollection>(
+        Func<TAllServicesCollection>? getAllServicesAction = null,
+        Func<TRootServicesCollection>? getRootServicesAction = null)
+        where TAllServicesCollection : notnull
+        where TRootServicesCollection : notnull
+    {
+        if (getAllServicesAction is not null)
+            allServicesAndFilterCacheHandler.LazyRegisterServices(getAllServicesAction);
+
+        if (getRootServicesAction is not null)
+            rootServicesAndFilterCacheHandler.LazyRegisterServices(getRootServicesAction);
+
+        return this;
+    }
+
     public IServiceUsageVerifier UseAllServicesAsRootServices()
     {
         _useAllServicesAsRootServices = true;
         rootServicesAndFilterCacheHandler.ReplaceServiceCacheHandler(allServicesCacheHandler);
-        
+
         return this;
     }
 }

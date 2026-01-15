@@ -13,6 +13,9 @@ internal interface IServiceAndFilterCacheHandler
 
     void RegisterServices<TServiceCollection>(in TServiceCollection services) where TServiceCollection : notnull;
 
+    void LazyRegisterServices<TServiceCollection>(in Func<TServiceCollection> getServicesAction)
+        where TServiceCollection : notnull;
+
     ServiceInfoSet GetFilteredServices<TServiceCollection>(
         in TServiceCollection? oneTimeServices = default, ServiceInfoFilterInfoList? oneTimeFilters = null)
         where TServiceCollection : notnull;

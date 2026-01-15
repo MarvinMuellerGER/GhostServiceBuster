@@ -19,7 +19,7 @@ file sealed class ServiceProviderUsageFilter : IServiceInfoFilter
         serviceInfos.Where(s => TypesResolvedByServiceProvider.Contains(s.ServiceType));
 }
 
-public static class ServiceUsageVerifierExtensions
+public static partial class ServiceUsageVerifierExtensions
 {
     public static IServiceUsageVerifier RegisterServiceProviderUsageRootServicesFilter(
         this IServiceUsageVerifier serviceUsageVerifier) =>

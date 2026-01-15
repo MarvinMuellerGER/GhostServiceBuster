@@ -11,16 +11,19 @@ public static class ServiceUsageVerifierExtensions
     {
         public IServiceUsageVerifier ForServiceCollection(IServiceProvider services) =>
             serviceUsageVerifier.ForServiceCollection()
-                .RegisterAllServices(services);
+                .LazyRegisterAllServices(() => services);
 
-        public IServiceUsageVerifier ForServiceCollection(IServiceCollection services) =>
-            serviceUsageVerifier.ForServiceCollection()
-                .RegisterAllServices(services);
+        public IServiceUsageVerifier ForServiceCollection(IServiceCollection services)
+        {
+            return serviceUsageVerifier.ForServiceCollection()
+                .LazyRegisterAllServices(() => services);
+        }
 
         public IServiceUsageVerifier ForServiceCollection() =>
             serviceUsageVerifier.Default()
                 .RegisterServiceCollectionServiceInfoExtractor()
                 .RegisterServiceProviderUsageRootServicesFilter()
+                .RegisterServiceCollectionInstanceUnusedServicesFilter()
                 .UseAllServicesAsRootServices();
     }
 }

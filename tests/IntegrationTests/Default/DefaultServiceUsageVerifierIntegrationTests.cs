@@ -1,10 +1,11 @@
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Default;
 using GhostServiceBuster.Filter;
+using GhostServiceBuster.IntegrationTests.Testees;
 
-namespace GhostServiceBuster.IntegrationTests;
+namespace GhostServiceBuster.IntegrationTests.Default;
 
-public static class ServiceUsageVerifierIntegrationTests
+public static class DefaultServiceUsageVerifierIntegrationTests
 {
     private static readonly IServiceUsageVerifier ServiceUsageVerifier = Verify.New.Default();
 
@@ -49,7 +50,7 @@ public static class ServiceUsageVerifierIntegrationTests
             // Arrange
             var service1 = typeof(Service1);
             var service2 = typeof(Service2);
-            var rootService = typeof(RootServiceUsingService1);
+            var rootService = typeof(RootServiceUsingService2);
 
             var allServices = new List<Type> { service1, service2, rootService };
             var rootServices = new List<Type> { rootService };
@@ -60,8 +61,8 @@ public static class ServiceUsageVerifierIntegrationTests
 
             // Assert
             unusedServices.Should().HaveCount(1);
-            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService2));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService1));
+            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService1));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService2));
         }
     }
 
@@ -96,30 +97,4 @@ public static class ServiceUsageVerifierIntegrationTests
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IRootService));
         }
     }
-
-    #region Test Interfaces and Classes
-
-    private interface IService1;
-
-    private class Service1 : IService1;
-
-    private interface IService2;
-
-    private class Service2 : IService2;
-
-    private interface IService3;
-
-    private class Service3 : IService3;
-
-    private interface IRootService;
-
-    private class RootService : IRootService;
-
-    private interface IRootServiceUsingService1;
-
-#pragma warning disable CS9113 // Parameter is unread.
-    private class RootServiceUsingService1(IService1 service1) : IRootServiceUsingService1;
-#pragma warning restore CS9113 // Parameter is unread.
-
-    #endregion
 }

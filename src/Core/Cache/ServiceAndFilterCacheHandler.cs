@@ -39,6 +39,12 @@ internal sealed class ServiceAndFilterCacheHandler : IServiceAndFilterCacheHandl
         where TServiceCollection : notnull =>
         _serviceCacheHandler.RegisterServices(services);
 
+    public void LazyRegisterServices<TServiceCollection>(in Func<TServiceCollection> getServicesAction)
+        where TServiceCollection : notnull
+    {
+        _serviceCacheHandler.LazyRegisterServices(getServicesAction);
+    }
+
     public ServiceInfoSet GetFilteredServices<TServiceCollection>(
         in TServiceCollection? oneTimeServices = default, ServiceInfoFilterInfoList? oneTimeFilters = null)
         where TServiceCollection : notnull
