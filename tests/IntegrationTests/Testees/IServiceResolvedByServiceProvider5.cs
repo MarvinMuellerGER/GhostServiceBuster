@@ -1,0 +1,3 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+internal interface IServiceResolvedByServiceProvider5;

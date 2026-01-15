@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="GhostServiceBuster.MS"/>
-        <InternalsVisibleTo Include="$(RootNamespace).IntegrationTests"/>
+        <InternalsVisibleTo Include="$(SolutionName).IntegrationTests"/>
     </ItemGroup>
 
 </Project>

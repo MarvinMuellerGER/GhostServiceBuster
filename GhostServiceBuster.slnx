@@ -6,7 +6,6 @@
     <Project Path="src\Extensions\MS.Generator\MS.Generator\MS.Generator.csproj" />
     <Project Path="src\Extensions\MS.Generator.Attributes\MS.Generator.Attributes.csproj" />
     <Project Path="src\Extensions\NSB\NSB.csproj" />
-    <Project Path="tests\Extensions\MS.Generator.IntegrationTests\MS.Generator.IntegrationTests.csproj" />
   </Folder>
   <Project Path="src\Core\Core.csproj" />
   <Project Path="src\Abstractions\Abstractions.csproj" />
