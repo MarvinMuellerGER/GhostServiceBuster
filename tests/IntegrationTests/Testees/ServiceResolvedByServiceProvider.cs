@@ -1,0 +1,29 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+internal interface IServiceResolvedByServiceProvider;
+
+internal sealed class ServiceResolvedByServiceProvider : IServiceResolvedByServiceProvider;
+
+internal interface IServiceResolvedByServiceProvider1;
+
+internal interface IServiceResolvedByServiceProvider2;
+
+internal interface IServiceResolvedByServiceProvider3;
+
+internal interface IServiceResolvedByServiceProvider4;
+
+internal interface IServiceResolvedByServiceProvider5;
+
+internal interface IServiceResolvedByServiceProvider6;
+
+internal interface IServiceResolvedByServiceProvider7;
+
+internal interface IServiceResolvedByServiceProvider8;
+
+internal interface IServiceResolvedByServiceProvider9;
+
+internal interface IServiceResolvedByServiceProvider10;
+
+internal interface IServiceResolvedByServiceProvider11;
+
+internal interface IServiceResolvedByServiceProvider12;

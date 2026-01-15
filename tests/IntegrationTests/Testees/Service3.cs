@@ -1,3 +1,5 @@
 namespace GhostServiceBuster.IntegrationTests.Testees;
 
-internal class Service3 : IService3;
+internal interface IService3;
+
+internal sealed class Service3 : IService3;

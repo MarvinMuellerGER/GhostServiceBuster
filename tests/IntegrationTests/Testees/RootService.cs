@@ -1,3 +1,5 @@
 namespace GhostServiceBuster.IntegrationTests.Testees;
 
-internal class RootService : IRootService;
+internal interface IRootService;
+
+internal sealed class RootService : IRootService;
