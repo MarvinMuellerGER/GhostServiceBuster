@@ -18,6 +18,7 @@ public static class ServiceProviderIntegrationTests
             serviceCollection.AddTransient<IService1, Service1>();
             serviceCollection.AddTransient<IService2, Service2>();
             serviceCollection.AddTransient<IService3, Service3>();
+            serviceCollection.AddTransient<IServiceResolvedByServiceProvider, ServiceResolvedByServiceProvider>();
             serviceCollection.AddSingleton<IServiceCollection>(serviceCollection);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -29,6 +30,9 @@ public static class ServiceProviderIntegrationTests
             // exclude Service3
             serviceUsageVerifier.RegisterAllServicesFilters(services =>
                 services.Where(s => s.ServiceType != typeof(IService3)));
+
+            // usage of IServiceResolvedByServiceProvider
+            _ = serviceProvider.GetService<IServiceResolvedByServiceProvider>();
 
             // Act
             var unusedServices = serviceUsageVerifier.FindUnusedServices();
