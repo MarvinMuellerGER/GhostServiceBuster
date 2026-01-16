@@ -20,7 +20,7 @@ internal interface IUnusedServiceDetector
             new ServiceInfo(dependencyDetector(servicesToAnalyze, potentialDependencies)));
 
     /// <summary>
-    ///     Identifies services that are not used in the dependency chain of the root services.
+    ///     Identifies services that are not used in the dependency tree starting from root services.
     /// </summary>
     ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices);
 }

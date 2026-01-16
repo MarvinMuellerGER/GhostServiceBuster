@@ -1,19 +1,14 @@
-using System.Diagnostics.CodeAnalysis;
 using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Detect;
 
-[SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance.")]
 internal sealed class UnusedServiceDetector : IUnusedServiceDetector
 {
     private readonly List<DependencyDetector> _dependencyDetectors = [];
 
     public void RegisterDependencyDetector(DependencyDetector dependencyDetector) =>
         _dependencyDetectors.Add(dependencyDetector);
-
-    /// <summary>
-    ///     Identifies services that are not used in the dependency tree starting from root services.
-    /// </summary>
+    
     public ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
     {
         var usedServices = rootServices.ToList();
