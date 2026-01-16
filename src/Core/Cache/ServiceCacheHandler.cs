@@ -9,6 +9,8 @@ internal sealed class ServiceCacheHandler(IServiceInfoExtractorHandler serviceIn
     private readonly List<Action> _lazyRegisterActions = [];
     private ServiceInfoSet _services = [];
 
+    public bool HasAnyLazyRegisterActions => _lazyRegisterActions.Count is not 0;
+
     public void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
         where TServiceCollection : notnull
     {

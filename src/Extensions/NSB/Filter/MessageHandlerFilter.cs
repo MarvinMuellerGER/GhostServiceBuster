@@ -6,8 +6,10 @@ namespace GhostServiceBuster.NServiceBus.Filter;
 file class MessageHandlerFilter : IServiceInfoFilter
 {
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfo) =>
-        serviceInfo.Where(s => s.ServiceType.IsAssignableTo(typeof(IHandleMessages<>)));
-    
+        serviceInfo.Where(s =>
+            s.ServiceType.GetInterfaces()
+                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IHandleMessages<>)));
+
     public bool IsIndividual => true;
 }
 

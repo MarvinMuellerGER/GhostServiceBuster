@@ -4,6 +4,8 @@ namespace GhostServiceBuster.Cache;
 
 internal interface IServiceCacheHandler
 {
+    bool HasAnyLazyRegisterActions { get; }
+
     void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
         where TServiceCollection : notnull;
 

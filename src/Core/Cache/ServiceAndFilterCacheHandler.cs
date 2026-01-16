@@ -49,7 +49,8 @@ internal sealed class ServiceAndFilterCacheHandler : IServiceAndFilterCacheHandl
         in TServiceCollection? oneTimeServices = default, ServiceInfoFilterInfoList? oneTimeFilters = null)
         where TServiceCollection : notnull
     {
-        if (!_newServicesRegisteredSinceLastGet && !_newFiltersRegisteredSinceLastGet &&
+        if (!_serviceCacheHandler.HasAnyLazyRegisterActions &&
+            !_newServicesRegisteredSinceLastGet && !_newFiltersRegisteredSinceLastGet &&
             _servicesFiltered is not null && oneTimeServices is null && oneTimeFilters is null)
             return _servicesFiltered;
 

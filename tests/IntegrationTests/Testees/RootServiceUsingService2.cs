@@ -4,4 +4,4 @@ namespace GhostServiceBuster.IntegrationTests.Testees;
 
 internal interface IRootServiceUsingService2;
 
-internal sealed class RootServiceUsingService2(IService2 service1) : IRootServiceUsingService2;
+internal sealed class RootServiceUsingService2(IService2 service2) : IRootServiceUsingService2;
