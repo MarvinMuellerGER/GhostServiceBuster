@@ -24,4 +24,7 @@ partial class ServiceInfoFilterInfoList
         filterInfo is null ? [] : [filterInfo];
 
     public static implicit operator ServiceInfoFilterInfoList(ImmutableList<ServiceInfoFilterInfo> list) => new(list);
+
+    public static implicit operator ServiceInfoFilterInfoList(List<ServiceInfoFilterInfo> list) =>
+        list.ToImmutableList();
 }

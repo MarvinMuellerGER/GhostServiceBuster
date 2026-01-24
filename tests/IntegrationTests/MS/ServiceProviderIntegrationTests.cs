@@ -25,7 +25,7 @@ public static class ServiceProviderIntegrationTests
             var serviceUsageVerifier = serviceProvider.CreateServiceUsageVerifier();
 
             serviceUsageVerifier.RegisterRootServicesFilters(services =>
-                services.Where(s => s.ServiceType == typeof(IRootServiceUsingService2)));
+                services.Where(s => s.ServiceType == typeof(IRootServiceUsingService2)), useAllServices: true);
 
             // exclude Service3
             serviceUsageVerifier.RegisterAllServicesFilters(services =>
@@ -43,6 +43,7 @@ public static class ServiceProviderIntegrationTests
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService2));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IRootServiceUsingService2));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceResolvedByServiceProvider));
         }
     }
 }

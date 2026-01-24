@@ -6,20 +6,10 @@ internal interface IServiceAndFilterCacheHandler
 {
     bool NewServicesOrFiltersRegisteredSinceLastGet { get; }
 
-    void ReplaceServiceCacheHandler(IServiceCacheHandler serviceCacheHandler);
-
-    void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
-        where TServiceCollection : notnull;
-
-    void RegisterServices<TServiceCollection>(in TServiceCollection services) where TServiceCollection : notnull;
-
-    void LazyRegisterServices<TServiceCollection>(in Func<TServiceCollection> getServicesAction)
-        where TServiceCollection : notnull;
-
     ServiceInfoSet GetFilteredServices<TServiceCollection>(
-        in TServiceCollection? oneTimeServices = default, ServiceInfoFilterInfoList? oneTimeFilters = null)
+        in TServiceCollection? oneTimeServices = default, in ServiceInfoFilterInfoList? oneTimeFilters = null)
         where TServiceCollection : notnull;
 
-    ServiceInfoSet GetFilteredServices(ServiceInfoFilterInfoList? oneTimeFilters = null) =>
+    ServiceInfoSet GetFilteredServices(in ServiceInfoFilterInfoList? oneTimeFilters = null) =>
         GetFilteredServices<object>(null, oneTimeFilters);
 }

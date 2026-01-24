@@ -20,23 +20,43 @@ internal sealed partial class Composition
         .Bind<IUnusedServiceDetector>().As(Singleton).To<UnusedServiceDetector>()
         .Bind<IServiceInfoExtractorHandler>().As(PerResolve).To<ServiceInfoExtractorHandler>()
         .Bind<IFilterHandler>().As(Singleton).To<FilterHandler>()
+        .Bind<IFilterHandler>(RootFiltersForAllServices).As(Singleton).To<RootFiltersForAllServicesHandler>()
+        .Bind<IRootFilterHandler>().As(Singleton).To<RootFilterHandler>()
+        .Bind<IRootFilterSplitter>().As(Singleton).To<RootFilterSplitter>()
         .Bind<IServiceCacheHandler>(All).As(PerResolve).To<ServiceCacheHandler>()
         .Bind<IServiceCacheHandler>(Root).As(PerResolve).To<ServiceCacheHandler>()
         .Bind<IServiceCacheHandler>(Unused).As(PerResolve).To<ServiceCacheHandler>()
+        .Bind<IRootFilterCacheHandler>().As(PerResolve).To<RootFilterCacheHandler>()
+        .Bind<IFilterCacheHandler>(RootFiltersForRootServices).As(PerResolve).To<FilterCacheHandler>()
+        .Bind<IFilterCacheHandler>(RootFiltersForAllServices).As(PerResolve).To<FilterCacheHandler>(ctx =>
+        {
+            ctx.Inject<IFilterHandler>(RootFiltersForAllServices, out var rootFiltersForRootServicesHandler);
+
+            return new FilterCacheHandler(rootFiltersForRootServicesHandler);
+        })
         .Bind<IFilterCacheHandler>(All).As(PerResolve).To<FilterCacheHandler>()
-        .Bind<IFilterCacheHandler>(Root).As(PerResolve).To<FilterCacheHandler>()
         .Bind<IFilterCacheHandler>(Unused).As(PerResolve).To<FilterCacheHandler>()
+        .Bind<IRootServiceAndFilterCacheHandler>().As(PerResolve).To<RootServiceAndFilterCacheHandler>()
+        .Bind<IServiceAndFilterCacheHandler>(AllServicesWithRootFilters).As(PerResolve)
+        .To<ServiceAndFilterCacheHandler>(ctx =>
+        {
+            ctx.Inject<IServiceCacheHandler>(All, out var serviceCacheHandler);
+            ctx.Inject<IFilterCacheHandler>(RootFiltersForAllServices, out var filterCacheHandler);
+
+            return new ServiceAndFilterCacheHandler(serviceCacheHandler, filterCacheHandler);
+        })
+        .Bind<IServiceAndFilterCacheHandler>(RootServicesWithRootFilters).As(PerResolve)
+        .To<ServiceAndFilterCacheHandler>(ctx =>
+        {
+            ctx.Inject<IServiceCacheHandler>(Root, out var serviceCacheHandler);
+            ctx.Inject<IFilterCacheHandler>(RootFiltersForRootServices, out var filterCacheHandler);
+
+            return new ServiceAndFilterCacheHandler(serviceCacheHandler, filterCacheHandler);
+        })
         .Bind<IServiceAndFilterCacheHandler>(All).As(PerResolve).To<ServiceAndFilterCacheHandler>(ctx =>
         {
             ctx.Inject<IServiceCacheHandler>(All, out var serviceCacheHandler);
             ctx.Inject<IFilterCacheHandler>(All, out var filterCacheHandler);
-
-            return new ServiceAndFilterCacheHandler(serviceCacheHandler, filterCacheHandler);
-        })
-        .Bind<IServiceAndFilterCacheHandler>(Root).As(PerResolve).To<ServiceAndFilterCacheHandler>(ctx =>
-        {
-            ctx.Inject<IServiceCacheHandler>(Root, out var serviceCacheHandler);
-            ctx.Inject<IFilterCacheHandler>(Root, out var filterCacheHandler);
 
             return new ServiceAndFilterCacheHandler(serviceCacheHandler, filterCacheHandler);
         })

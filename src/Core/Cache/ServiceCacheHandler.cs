@@ -18,16 +18,24 @@ internal sealed class ServiceCacheHandler(IServiceInfoExtractorHandler serviceIn
         RegisterServices(services);
     }
 
-    public void RegisterServices<TServiceCollection>(in TServiceCollection services)
+    public void RegisterServices<TServiceCollection>(in TServiceCollection? services)
         where TServiceCollection : notnull
     {
+        if (services is null)
+            return;
+
         _services = ExtractServiceInfoAndCombineWithCachedServices(services);
         NewServicesRegistered?.Invoke();
     }
 
-    public void LazyRegisterServices<TServiceCollection>(Func<TServiceCollection> getServicesAction)
-        where TServiceCollection : notnull =>
+    public void LazyRegisterServices<TServiceCollection>(Func<TServiceCollection>? getServicesAction)
+        where TServiceCollection : notnull
+    {
+        if (getServicesAction is null)
+            return;
+
         _lazyRegisterActions.Add(() => RegisterServices(getServicesAction()));
+    }
 
     public ServiceInfoSet GetServices<TServiceCollection>(in TServiceCollection? oneTimeServices = default)
         where TServiceCollection : notnull

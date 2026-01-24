@@ -78,14 +78,9 @@ internal sealed partial class ServiceUsageVerifier
         ServiceInfoFilterInfoList? rootServicesFilters,
         ServiceInfoFilterInfoList? unusedServicesFilters)
     {
-        if (allServicesFilters is not null)
-            allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
-
-        if (rootServicesFilters is not null)
-            rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
-
-        if (unusedServicesFilters is not null)
-            unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
+        allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
+        rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
+        unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
 
         return this;
     }
@@ -95,14 +90,9 @@ internal sealed partial class ServiceUsageVerifier
         IReadOnlyList<IServiceInfoFilter>? rootServicesFilters,
         IReadOnlyList<IServiceInfoFilter>? unusedServicesFilters)
     {
-        if (allServicesFilters is not null)
-            allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
-
-        if (rootServicesFilters is not null)
-            rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
-
-        if (unusedServicesFilters is not null)
-            unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
+        allServicesFilterCacheHandler.RegisterFilters(allServicesFilters);
+        rootServicesFilterCacheHandler.RegisterFilters(rootServicesFilters);
+        unusedServicesFilterCacheHandler.RegisterFilters(unusedServicesFilters);
 
         return this;
     }
@@ -137,11 +127,8 @@ internal sealed partial class ServiceUsageVerifier
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
-        if (allServices is not null)
-            allServicesAndFilterCacheHandler.RegisterServices(allServices);
-
-        if (rootServices is not null)
-            rootServicesAndFilterCacheHandler.RegisterServices(rootServices);
+        allServicesCacheHandler.RegisterServices(allServices);
+        rootServicesCacheHandler.RegisterServices(rootServices);
 
         return this;
     }
@@ -152,19 +139,8 @@ internal sealed partial class ServiceUsageVerifier
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
-        if (getAllServicesAction is not null)
-            allServicesAndFilterCacheHandler.LazyRegisterServices(getAllServicesAction);
-
-        if (getRootServicesAction is not null)
-            rootServicesAndFilterCacheHandler.LazyRegisterServices(getRootServicesAction);
-
-        return this;
-    }
-
-    public IServiceUsageVerifier UseAllServicesAsRootServices()
-    {
-        _useAllServicesAsRootServices = true;
-        rootServicesAndFilterCacheHandler.ReplaceServiceCacheHandler(allServicesCacheHandler);
+        allServicesCacheHandler.LazyRegisterServices(getAllServicesAction);
+        rootServicesCacheHandler.LazyRegisterServices(getRootServicesAction);
 
         return this;
     }

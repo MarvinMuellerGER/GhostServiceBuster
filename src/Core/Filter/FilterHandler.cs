@@ -4,18 +4,23 @@ namespace GhostServiceBuster.Filter;
 
 internal sealed class FilterHandler : IFilterHandler
 {
-    public ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList? filters) =>
-        filters is null || filters.Count is 0
-            ? serviceInfo
-            : ApplyNonIndividualFilters(serviceInfo, filters).Concat(ApplyIndividualFilters(serviceInfo, filters));
+    public ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList? filters)
+    {
+        if (filters is null || filters.Count is 0)
+            return serviceInfo;
+
+        return ApplyNonIndividualFilters(serviceInfo, filters).Concat(ApplyIndividualFilters(serviceInfo, filters));
+    }
 
     private static ServiceInfoSet ApplyNonIndividualFilters(
-        ServiceInfoSet serviceInfo, IReadOnlyList<ServiceInfoFilterInfo> filters) =>
-        filters.All(filter => filter.IsIndividual)
+        ServiceInfoSet serviceInfo, IReadOnlyList<ServiceInfoFilterInfo> filters)
+    {
+        return filters.All(filter => filter.IsIndividual)
             ? []
             : filters
                 .Where(filter => !filter.IsIndividual)
                 .Aggregate(serviceInfo, (current, filter) => filter.Filter.Invoke(current));
+    }
 
     private static ServiceInfoSet ApplyIndividualFilters(
         ServiceInfoSet serviceInfo, IEnumerable<ServiceInfoFilterInfo> filters) =>

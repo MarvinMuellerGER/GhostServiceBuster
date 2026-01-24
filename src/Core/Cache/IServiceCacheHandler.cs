@@ -9,9 +9,9 @@ internal interface IServiceCacheHandler
     void ClearAndRegisterServices<TServiceCollection>(in TServiceCollection services)
         where TServiceCollection : notnull;
 
-    void RegisterServices<TServiceCollection>(in TServiceCollection services) where TServiceCollection : notnull;
+    void RegisterServices<TServiceCollection>(in TServiceCollection? services) where TServiceCollection : notnull;
 
-    void LazyRegisterServices<TServiceCollection>(Func<TServiceCollection> getServicesAction)
+    void LazyRegisterServices<TServiceCollection>(Func<TServiceCollection>? getServicesAction)
         where TServiceCollection : notnull;
 
     ServiceInfoSet GetServices<TServiceCollection>(in TServiceCollection? oneTimeServices = default)

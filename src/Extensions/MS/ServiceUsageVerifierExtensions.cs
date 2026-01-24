@@ -9,7 +9,7 @@ public static class ServiceUsageVerifierExtensions
 {
     extension(IServiceUsageVerifier serviceUsageVerifier)
     {
-        public IServiceUsageVerifier ForServiceCollection(IServiceProvider services) =>
+        public IServiceUsageVerifier ForServiceProvider(IServiceProvider services) =>
             serviceUsageVerifier.ForServiceCollection()
                 .LazyRegisterAllServices(() => services);
 
@@ -23,7 +23,6 @@ public static class ServiceUsageVerifierExtensions
             serviceUsageVerifier.Default()
                 .RegisterServiceCollectionServiceInfoExtractor()
                 .RegisterServiceProviderUsageRootServicesFilter()
-                .RegisterServiceCollectionInstanceUnusedServicesFilter()
-                .UseAllServicesAsRootServices();
+                .RegisterMicrosoftAndSystemNamespacesAllServicesFilter();
     }
 }

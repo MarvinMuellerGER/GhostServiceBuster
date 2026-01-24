@@ -21,7 +21,7 @@ public static class ServiceCollectionIntegrationTests
             ServiceCollection.AddTransient<IService3, Service3>();
 
             ServiceUsageVerifier.RegisterRootServicesFilters(services =>
-                services.Where(s => s.ServiceType == typeof(IRootServiceUsingService2)));
+                services.Where(s => s.ServiceType == typeof(IRootServiceUsingService2)), useAllServices: true);
 
             // exclude Service3
             ServiceUsageVerifier.RegisterAllServicesFilters(services =>

@@ -78,7 +78,6 @@ public static class DefaultServiceUsageVerifierIntegrationTests
             var rootService = typeof(RootService);
 
             Type[] allServices = [service1, service2, service3, rootService];
-            var rootServices = new List<Type> { rootService };
 
             var excludeService3Filter = new ServiceInfoFilter(services =>
                 services.Where(s => s.ServiceType != typeof(IService3)));
@@ -86,7 +85,7 @@ public static class DefaultServiceUsageVerifierIntegrationTests
             // Act
             var unusedServices = ServiceUsageVerifier
                 .RegisterAllServicesFilters(excludeService3Filter)
-                .RegisterServices(allServices, rootServices)
+                .RegisterServices(allServices, rootService)
                 .FindUnusedServices();
 
             // Assert

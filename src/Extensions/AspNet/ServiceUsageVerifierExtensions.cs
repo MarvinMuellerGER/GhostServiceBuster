@@ -20,20 +20,20 @@ public static class ServiceUsageVerifierExtensions
     extension(IServiceUsageVerifier serviceUsageVerifier)
     {
         public IServiceUsageVerifier ForAspNet(IServiceProvider services) =>
-            serviceUsageVerifier.ForServiceCollection(services)
+            serviceUsageVerifier.ForServiceProvider(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(services);
 
         public IServiceUsageVerifier RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
-            serviceUsageVerifier.RegisterControllersAsRootServices(services)
-                .RegisterPageModelsAsRootServices(services)
-                .RegisterMinimalApiHandlersAsRootServices(services)
-                .RegisterHostedServicesAsRootServices(services)
-                .RegisterMiddlewaresAsRootServices(services)
-                .RegisterEndpointFiltersAsRootServices(services)
-                .RegisterAuthorizationHandlersAsRootServices(services)
-                .RegisterHealthChecksAsRootServices(services)
-                .RegisterViewComponentsAsRootServices(services)
-                .RegisterTagHelpersAsRootServices(services);
+            serviceUsageVerifier.RegisterControllersAsRootServices(services);
+        /*.RegisterPageModelsAsRootServices(services)
+        .RegisterMinimalApiHandlersAsRootServices(services)
+        .RegisterHostedServicesAsRootServices(services)
+        .RegisterMiddlewaresAsRootServices(services)
+        .RegisterEndpointFiltersAsRootServices(services)
+        .RegisterAuthorizationHandlersAsRootServices(services)
+        .RegisterHealthChecksAsRootServices(services)
+        .RegisterViewComponentsAsRootServices(services)
+        .RegisterTagHelpersAsRootServices(services);*/
 
         private IServiceUsageVerifier RegisterControllersAsRootServices(IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
@@ -48,7 +48,7 @@ public static class ServiceUsageVerifierExtensions
                 services.GetRequiredService<ApplicationPartManager>()
                     .ApplicationParts
                     .OfType<AssemblyPart>()
-                    .SelectMany(p => p.Types)
+                    .SelectMany(p => p.Types.Select(t => t.AsType()))
                     .Where(t => typeof(PageModel).IsAssignableFrom(t) && !t.IsAbstract));
 
         private IServiceUsageVerifier RegisterMinimalApiHandlersAsRootServices(IServiceProvider services) =>

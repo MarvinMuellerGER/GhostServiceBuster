@@ -11,12 +11,15 @@ public static class EnumerableExtensions
         where TServiceInfo : ServiceInfo =>
         enumerable.Cast<ServiceInfo>().ToImmutableHashSet();
 
-    public static ServiceInfoFilterInfoList ToServiceInfoFilterInfoList<TServiceInfoFilterInfo>(
-        this IEnumerable<TServiceInfoFilterInfo> enumerable) where TServiceInfoFilterInfo : ServiceInfoFilterInfo =>
-        enumerable.Cast<ServiceInfoFilterInfo>().ToImmutableList();
+    public static ServiceInfoFilterInfoList ToServiceInfoFilterInfoList(
+        this IReadOnlyList<IServiceInfoFilter> filters) =>
+        filters.Select(f => f is IRootServiceInfoFilter rf
+                ? new RootServiceInfoFilterInfo(f.GetFilteredServices, f.IsIndividual, rf.UseAllServices)
+                : new ServiceInfoFilterInfo(f.GetFilteredServices, f.IsIndividual))
+            .ToImmutableList();
 
     public static ServiceInfoSet Select(this IEnumerable source, Func<object?, ServiceInfo> selector) =>
-        Select<ServiceInfo>(source, selector).ToImmutableHashSet();
+        source.Select<ServiceInfo>(selector).ToImmutableHashSet();
 
     public static ServiceInfoFilterInfoList Concat(
         this IEnumerable<ServiceInfoFilterInfo> first, IEnumerable<ServiceInfoFilterInfo>? second) =>

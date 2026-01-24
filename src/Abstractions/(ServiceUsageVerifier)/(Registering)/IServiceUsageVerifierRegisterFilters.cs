@@ -18,8 +18,8 @@ public interface IServiceUsageVerifierRegisterFilters
     IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilterInfoList allServicesFilters) =>
         RegisterFilters(allServicesFilters);
 
-    IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilter allServicesFilter) =>
-        RegisterFilters(allServicesFilter);
+    IServiceUsageVerifier RegisterAllServicesFilters(ServiceInfoFilter allServicesFilter, bool isIndividual = false) =>
+        RegisterFilters(new ServiceInfoFilterInfo(allServicesFilter, isIndividual));
 
     IServiceUsageVerifier RegisterAllServicesFilters(params IReadOnlyList<IServiceInfoFilter> allServicesFilters) =>
         RegisterFilters(allServicesFilters);
@@ -30,8 +30,10 @@ public interface IServiceUsageVerifierRegisterFilters
     IServiceUsageVerifier RegisterRootServicesFilters(ServiceInfoFilterInfoList rootServicesFilters) =>
         RegisterFilters(rootServicesFilters: rootServicesFilters);
 
-    IServiceUsageVerifier RegisterRootServicesFilters(ServiceInfoFilter rootServicesFilter) =>
-        RegisterFilters(rootServicesFilters: rootServicesFilter);
+    IServiceUsageVerifier RegisterRootServicesFilters(
+        ServiceInfoFilter rootServicesFilter, bool isIndividual = false, bool useAllServices = false) =>
+        RegisterFilters(
+            rootServicesFilters: new RootServiceInfoFilterInfo(rootServicesFilter, isIndividual, useAllServices));
 
     IServiceUsageVerifier RegisterRootServicesFilters(params IReadOnlyList<IServiceInfoFilter> rootServicesFilters) =>
         RegisterFilters(rootServicesFilters: rootServicesFilters);
@@ -42,8 +44,9 @@ public interface IServiceUsageVerifierRegisterFilters
     IServiceUsageVerifier RegisterUnusedServicesFilters(ServiceInfoFilterInfoList unusedServicesFilters) =>
         RegisterFilters(unusedServicesFilters: unusedServicesFilters);
 
-    IServiceUsageVerifier RegisterUnusedServicesFilters(ServiceInfoFilter unusedServicesFilter) =>
-        RegisterFilters(unusedServicesFilters: unusedServicesFilter);
+    IServiceUsageVerifier RegisterUnusedServicesFilters(
+        ServiceInfoFilter unusedServicesFilter, bool isIndividual = false) =>
+        RegisterFilters(unusedServicesFilters: new ServiceInfoFilterInfo(unusedServicesFilter, isIndividual));
 
     IServiceUsageVerifier RegisterUnusedServicesFilters(
         params IReadOnlyList<IServiceInfoFilter> unusedServicesFilters) =>

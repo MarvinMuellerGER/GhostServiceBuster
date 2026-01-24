@@ -7,14 +7,17 @@ internal sealed class FilterCacheHandler(IFilterHandler filterHandler) : IFilter
 {
     private readonly List<ServiceInfoFilterInfo> _filters = [];
 
-    public void RegisterFilters(ServiceInfoFilterInfoList filters)
+    public event EventHandlerWithoutParameters? NewFiltersRegistered;
+
+    public void RegisterFilters(ServiceInfoFilterInfoList? filters)
     {
+        if (filters is null)
+            return;
+
         _filters.AddRange(filters);
         NewFiltersRegistered?.Invoke();
     }
 
     public ServiceInfoSet ApplyFilters(ServiceInfoSet serviceInfo, ServiceInfoFilterInfoList? oneTimeFilters) =>
         filterHandler.ApplyFilters(serviceInfo, _filters.Concat(oneTimeFilters));
-
-    public event EventHandlerWithoutParameters? NewFiltersRegistered;
 }

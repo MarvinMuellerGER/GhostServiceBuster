@@ -13,25 +13,14 @@ public interface IServiceUsageVerifierRegisterServices
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull;
 
-    IServiceUsageVerifier RegisterAllServices<TAllServicesCollection>(
-        TAllServicesCollection allServices, bool useAsRootServicesToo = false)
-        where TAllServicesCollection : notnull
-    {
-        if (useAsRootServicesToo)
-            UseAllServicesAsRootServices();
-
-        return RegisterServices<TAllServicesCollection, object>(allServices);
-    }
+    IServiceUsageVerifier RegisterAllServices<TAllServicesCollection>(TAllServicesCollection allServices)
+        where TAllServicesCollection : notnull =>
+        RegisterServices<TAllServicesCollection, object>(allServices);
 
     IServiceUsageVerifier LazyRegisterAllServices<TAllServicesCollection>(
-        Func<TAllServicesCollection> getAllServicesAction, bool useAsRootServicesToo = false)
-        where TAllServicesCollection : notnull
-    {
-        if (useAsRootServicesToo)
-            UseAllServicesAsRootServices();
-
-        return LazyRegisterServices<TAllServicesCollection, object>(getAllServicesAction);
-    }
+        Func<TAllServicesCollection> getAllServicesAction)
+        where TAllServicesCollection : notnull =>
+        LazyRegisterServices<TAllServicesCollection, object>(getAllServicesAction);
 
     IServiceUsageVerifier RegisterRootServices<TRootServicesCollection>(TRootServicesCollection rootServices)
         where TRootServicesCollection : notnull =>
@@ -41,6 +30,4 @@ public interface IServiceUsageVerifierRegisterServices
         Func<TRootServicesCollection> getRootServicesAction)
         where TRootServicesCollection : notnull =>
         LazyRegisterServices<object, TRootServicesCollection>(getRootServicesAction: getRootServicesAction);
-
-    IServiceUsageVerifier UseAllServicesAsRootServices();
 }

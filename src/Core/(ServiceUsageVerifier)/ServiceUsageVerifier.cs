@@ -12,18 +12,17 @@ internal sealed partial class ServiceUsageVerifier(
     IUnusedServiceDetector unusedServiceDetector,
     IServiceInfoExtractorHandler serviceInfoExtractorHandler,
     IFilterHandler filterHandler,
+    IRootFilterHandler rootFilterHandler,
     [Tag(All)] IServiceCacheHandler allServicesCacheHandler,
     [Tag(Root)] IServiceCacheHandler rootServicesCacheHandler,
     [Tag(Unused)] IServiceCacheHandler unusedServicesCacheHandler,
     [Tag(All)] IFilterCacheHandler allServicesFilterCacheHandler,
-    [Tag(Root)] IFilterCacheHandler rootServicesFilterCacheHandler,
+    IRootFilterCacheHandler rootServicesFilterCacheHandler,
     [Tag(Unused)] IFilterCacheHandler unusedServicesFilterCacheHandler,
     [Tag(All)] IServiceAndFilterCacheHandler allServicesAndFilterCacheHandler,
-    [Tag(Root)] IServiceAndFilterCacheHandler rootServicesAndFilterCacheHandler,
+    IRootServiceAndFilterCacheHandler rootServicesAndFilterCacheHandler,
     [Tag(Unused)] IServiceAndFilterCacheHandler unusedServicesAndFilterCacheHandler) : IServiceUsageVerifier
 {
-    private bool _useAllServicesAsRootServices;
-
     public IServiceUsageVerifier FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
         out ServiceInfoSet unusedServices,
         in TAllServicesCollection? oneTimeAllServices = default,
@@ -34,21 +33,23 @@ internal sealed partial class ServiceUsageVerifier(
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
-        if (oneTimeAllServices is not null || oneTimeRootServices is not null ||
-            oneTimeAllServicesFilters is not null || oneTimeRootServicesFilters is not null ||
-            allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet ||
-            rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet)
+        var recalculationRequired = oneTimeAllServices is not null || oneTimeRootServices is not null ||
+                                    oneTimeAllServicesFilters is not null || oneTimeRootServicesFilters is not null ||
+                                    allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet ||
+                                    rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet;
+
+        if (recalculationRequired)
         {
             var filteredAllServices =
                 allServicesAndFilterCacheHandler.GetFilteredServices(oneTimeAllServices, oneTimeAllServicesFilters);
 
-            var filteredRootServices =
-                rootServicesAndFilterCacheHandler.GetFilteredServices(oneTimeRootServices, oneTimeRootServicesFilters);
+            var filteredRootServices = rootServicesAndFilterCacheHandler.GetFilteredServices(
+                oneTimeAllServices, oneTimeRootServices, oneTimeRootServicesFilters);
 
             var unusedServicesUnfiltered =
                 unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
 
-            unusedServicesAndFilterCacheHandler.ClearAndRegisterServices(unusedServicesUnfiltered);
+            unusedServicesCacheHandler.ClearAndRegisterServices(unusedServicesUnfiltered);
         }
 
         unusedServices = unusedServicesAndFilterCacheHandler.GetFilteredServices(oneTimeUnusedServicesFilters);
@@ -67,10 +68,12 @@ internal sealed partial class ServiceUsageVerifier(
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
-        if (oneTimeAllServices is null && oneTimeRootServices is null &&
-            allServicesFilters is null && rootServicesFilters is null &&
-            !allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet &&
-            !rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet)
+        var recalculationRequired = oneTimeAllServices is null && oneTimeRootServices is null &&
+                                    allServicesFilters is null && rootServicesFilters is null &&
+                                    !allServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet &&
+                                    !rootServicesAndFilterCacheHandler.NewServicesOrFiltersRegisteredSinceLastGet;
+
+        if (!recalculationRequired)
         {
             unusedServices =
                 filterHandler.ApplyFilters(unusedServicesCacheHandler.GetServices(), unusedServicesFilters);
@@ -78,13 +81,13 @@ internal sealed partial class ServiceUsageVerifier(
             return this;
         }
 
+
         var extractedAllServices = allServicesCacheHandler.GetServices(oneTimeAllServices);
-        var extractedRootServices = _useAllServicesAsRootServices
-            ? extractedAllServices
-            : rootServicesCacheHandler.GetServices(oneTimeRootServices);
+        var extractedRootServices = rootServicesCacheHandler.GetServices(oneTimeRootServices);
 
         var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters);
-        var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters);
+        var filteredRootServices =
+            rootFilterHandler.ApplyFilters(extractedAllServices, extractedRootServices, rootServicesFilters);
 
         var unusedServicesUnfiltered =
             unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
@@ -111,8 +114,8 @@ internal sealed partial class ServiceUsageVerifier(
         var filteredAllServices =
             allServicesFilterCacheHandler.ApplyFilters(extractedAllServices, oneTimeAllServicesFilters);
 
-        var filteredRootServices =
-            rootServicesFilterCacheHandler.ApplyFilters(extractedRootServices, oneTimeRootServicesFilters);
+        var filteredRootServices = rootServicesFilterCacheHandler.ApplyFilters(
+            extractedAllServices, extractedRootServices, oneTimeRootServicesFilters);
 
         var unusedServicesUnfiltered =
             unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);
@@ -138,7 +141,8 @@ internal sealed partial class ServiceUsageVerifier(
         var extractedRootServices = serviceInfoExtractorHandler.GetServiceInfo(rootServices);
 
         var filteredAllServices = filterHandler.ApplyFilters(extractedAllServices, allServicesFilters);
-        var filteredRootServices = filterHandler.ApplyFilters(extractedRootServices, rootServicesFilters);
+        var filteredRootServices =
+            rootFilterHandler.ApplyFilters(extractedAllServices, extractedRootServices, rootServicesFilters);
 
         var unusedServicesUnfiltered =
             unusedServiceDetector.FindUnusedServices(filteredAllServices, filteredRootServices);

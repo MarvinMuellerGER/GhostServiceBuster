@@ -9,7 +9,7 @@ namespace GhostServiceBuster.Collections;
 public sealed partial class ServiceInfoFilterInfoList(params IImmutableList<ServiceInfoFilterInfo> list)
     : IImmutableList<ServiceInfoFilterInfo>
 {
-    public static ServiceInfoFilterInfoList Empty => new([]);
+    public static ServiceInfoFilterInfoList Empty => [];
 
     public int Count => list.Count;
 
@@ -62,6 +62,9 @@ public sealed partial class ServiceInfoFilterInfoList(params IImmutableList<Serv
 
     public IImmutableList<ServiceInfoFilterInfo> SetItem(int index, ServiceInfoFilterInfo value) =>
         list.SetItem(index, value);
+
+    public ServiceInfoFilterInfoList Where(Predicate<ServiceInfoFilterInfo>? predicate) =>
+        predicate is null ? this : list.Where(i => predicate(i)).ToImmutableList();
 
     public static ServiceInfoFilterInfoList Create(ReadOnlySpan<ServiceInfoFilterInfo> values) => new([..values]);
 }

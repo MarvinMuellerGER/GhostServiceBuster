@@ -6,7 +6,7 @@ using GhostServiceBuster.MS.Generator;
 
 namespace GhostServiceBuster.MS.Filter;
 
-file sealed class ServiceProviderUsageFilter : IServiceInfoFilter
+file sealed class ServiceProviderUsageFilter : IRootServiceInfoFilter
 {
     private FrozenSet<Type> TypesResolvedByServiceProvider =>
         field ??= AppDomain.CurrentDomain.GetAssemblies().SelectMany(a =>
@@ -14,6 +14,8 @@ file sealed class ServiceProviderUsageFilter : IServiceInfoFilter
             .ToFrozenSet();
 
     public bool IsIndividual => true;
+
+    public bool UseAllServices => true;
 
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfos) =>
         serviceInfos.Where(s => TypesResolvedByServiceProvider.Contains(s.ServiceType));
