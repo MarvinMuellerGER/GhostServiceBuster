@@ -1,15 +1,16 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.AspNet;
 
-public static class ServiceProviderExtensions
+public static class WebApplicationExtensions
 {
-    extension(IServiceProvider serviceProvider)
+    extension(WebApplication app)
     {
         public IServiceUsageVerifier CreateServiceUsageVerifier(IServiceCollection services) =>
-            Verify.New.ForAspNet(serviceProvider, services);
+            Verify.New.ForAspNet(app, services);
 
         public IServiceUsageVerifier CreateServiceUsageVerifierUnsafe() =>
-            Verify.New.ForAspNetUnsafe(serviceProvider);
+            Verify.New.ForAspNetUnsafe(app);
     }
 }

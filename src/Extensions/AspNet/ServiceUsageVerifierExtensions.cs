@@ -1,6 +1,7 @@
 using System.Reflection;
 using GhostServiceBuster.MS;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -19,8 +20,18 @@ public static class ServiceUsageVerifierExtensions
 {
     extension(IServiceUsageVerifier serviceUsageVerifier)
     {
-        public IServiceUsageVerifier ForAspNet(IServiceProvider services) =>
-            serviceUsageVerifier.ForServiceProvider(services)
+        public IServiceUsageVerifier ForAspNet(WebApplication app, IServiceCollection services) =>
+            serviceUsageVerifier.ForAspNet(app.Services, services);
+
+        public IServiceUsageVerifier ForAspNet(IServiceProvider serviceProvider, IServiceCollection services) =>
+            serviceUsageVerifier.ForServiceCollection(services)
+                .RegisterAspNetApplicationEntryPointsAsRootService(serviceProvider);
+
+        public IServiceUsageVerifier ForAspNetUnsafe(WebApplication app) =>
+            serviceUsageVerifier.ForAspNetUnsafe(app.Services);
+
+        public IServiceUsageVerifier ForAspNetUnsafe(IServiceProvider services) =>
+            serviceUsageVerifier.ForServiceProviderUnsafe(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(services);
 
         public IServiceUsageVerifier RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>

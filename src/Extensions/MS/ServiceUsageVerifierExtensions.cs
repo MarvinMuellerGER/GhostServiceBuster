@@ -9,7 +9,7 @@ public static class ServiceUsageVerifierExtensions
 {
     extension(IServiceUsageVerifier serviceUsageVerifier)
     {
-        public IServiceUsageVerifier ForServiceProvider(IServiceProvider services) =>
+        public IServiceUsageVerifier ForServiceProviderUnsafe(IServiceProvider services) =>
             serviceUsageVerifier.ForServiceCollection()
                 .LazyRegisterAllServices(() => services);
 

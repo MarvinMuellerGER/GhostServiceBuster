@@ -19,10 +19,9 @@ public static class ServiceProviderIntegrationTests
             serviceCollection.AddTransient<IService2, Service2>();
             serviceCollection.AddTransient<IService3, Service3>();
             serviceCollection.AddTransient<IServiceResolvedByServiceProvider, ServiceResolvedByServiceProvider>();
-            serviceCollection.AddSingleton<IServiceCollection>(serviceCollection);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var serviceUsageVerifier = serviceProvider.CreateServiceUsageVerifier();
+            var serviceUsageVerifier = serviceProvider.CreateServiceUsageVerifierUnsafe();
 
             serviceUsageVerifier.RegisterRootServicesFilters(services =>
                 services.Where(s => s.ServiceType == typeof(IRootServiceUsingService2)), useAllServices: true);
