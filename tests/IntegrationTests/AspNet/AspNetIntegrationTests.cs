@@ -2,7 +2,6 @@ using GhostServiceBuster.AspNet;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.IntegrationTests.Testees;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.IntegrationTests.AspNet;
@@ -71,12 +70,4 @@ public static class AspNetIntegrationTests
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestController));
         }
     }
-}
-
-[ApiController]
-[Route("test")]
-public sealed class TestController(IService2 service) : ControllerBase
-{
-    [HttpGet]
-    public string Test() => service.GetType().Name;
 }

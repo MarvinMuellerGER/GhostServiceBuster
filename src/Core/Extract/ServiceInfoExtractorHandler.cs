@@ -31,23 +31,34 @@ internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
                 return serviceInfoEnumerable.ToImmutableHashSet();
         }
 
+        var extractor = DetermineExtractor(serviceCollection, out bool extractorIsForEnumerable);
+
+        if (serviceCollection is not IEnumerable serviceCollectionAsEnumerable || extractorIsForEnumerable)
+            return extractor(serviceCollection);
+
+        return serviceCollectionAsEnumerable.Select(service => extractor(service!).First());
+    }
+
+    private ServiceInfoExtractorInternal DetermineExtractor<TServiceCollection>(
+        TServiceCollection serviceCollection, out bool extractorIsForEnumerable)
+    {
         var collectionType = typeof(TServiceCollection);
         var serviceCollectionType = serviceCollection is IEnumerable and not string
             ? GetElementType(collectionType)
             : collectionType;
 
-        var foundExtractor = _serviceInfoExtractors.TryGetValue(serviceCollectionType, out var extractor);
-        var extractorIsForEnumerable = false;
+        var foundExtractor = TryGetExtractor(serviceCollectionType, out var extractor);
+        extractorIsForEnumerable = false;
         if (!foundExtractor && serviceCollection is IEnumerable)
         {
             foundExtractor = extractorIsForEnumerable =
-                _serviceInfoExtractors.TryGetValue(collectionType, out extractor);
+                TryGetExtractor(collectionType, out extractor);
 
             if (!foundExtractor)
             {
                 var serviceEnumerableType = typeof(IEnumerable<>).MakeGenericType(serviceCollectionType);
                 foundExtractor = extractorIsForEnumerable =
-                    _serviceInfoExtractors.TryGetValue(serviceEnumerableType, out extractor);
+                    TryGetExtractor(serviceEnumerableType, out extractor);
             }
         }
 
@@ -55,10 +66,18 @@ internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
             throw new InvalidOperationException(
                 $"No service info extractor registered for {serviceCollectionType.FullName}.");
 
-        if (serviceCollection is not IEnumerable serviceCollectionAsEnumerable || extractorIsForEnumerable)
-            return extractor(serviceCollection);
+        return extractor;
 
-        return serviceCollectionAsEnumerable.Select(service => extractor(service!).First());
+        bool TryGetExtractor(Type type, out ServiceInfoExtractorInternal? serviceInfoExtractorInternal)
+        {
+            if (_serviceInfoExtractors.TryGetValue(type, out serviceInfoExtractorInternal))
+                return true;
+
+            serviceInfoExtractorInternal =
+                _serviceInfoExtractors.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(type)).Value;
+
+            return serviceInfoExtractorInternal is not null;
+        }
     }
 
     private bool TryAddNewServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
