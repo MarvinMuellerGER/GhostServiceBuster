@@ -21,8 +21,13 @@ public static class AspNetIntegrationTests
                 .AddControllers()
                 .AddApplicationPart(typeof(TestController).Assembly);
 
+            _builder.Services
+                .AddRazorPages()
+                .AddApplicationPart(typeof(TestPageModel).Assembly);
+
             _builder.Services.AddTransient<IService1, Service1>();
             _builder.Services.AddTransient<IService2, Service2>();
+            _builder.Services.AddTransient<IService3, Service3>();
 
             _app = _builder.Build();
             _app.MapControllers();
@@ -67,7 +72,9 @@ public static class AspNetIntegrationTests
             unusedServices.Should().HaveCount(1);
             unusedServices.Should().Contain(s => s.ServiceType == typeof(IService1));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService2));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestController));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestPageModel));
         }
     }
 }
