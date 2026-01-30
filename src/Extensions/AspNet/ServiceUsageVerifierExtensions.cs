@@ -38,7 +38,7 @@ public static class ServiceUsageVerifierExtensions
             serviceUsageVerifier.RegisterControllersAsRootServices(services)
                 .RegisterPageModelsAsRootServices(services)
                 .RegisterMinimalApiInjectionRootServicesFilter()
-                .RegisterHostedServicesAsRootServices(services)
+                .RegisterHostedServiceRootServicesFilter()
                 //.RegisterMiddlewaresAsRootServices(services)
                 .RegisterEndpointFiltersAsRootServices(services)
                 .RegisterAuthorizationHandlersAsRootServices(services)
@@ -61,12 +61,6 @@ public static class ServiceUsageVerifierExtensions
                     .OfType<AssemblyPart>()
                     .SelectMany(p => p.Types)
                     .Where(t => typeof(PageModel).IsAssignableFrom(t) && !t.IsAbstract));
-
-        private IServiceUsageVerifier RegisterHostedServicesAsRootServices(IServiceProvider services) =>
-            serviceUsageVerifier.RegisterRootServices(
-                services.GetServices<IHostedService>()
-                    .Select(s => s.GetType())
-                    .Distinct());
 
         private IServiceUsageVerifier RegisterMiddlewaresAsRootServices(IServiceCollection services) =>
             serviceUsageVerifier.RegisterRootServices(

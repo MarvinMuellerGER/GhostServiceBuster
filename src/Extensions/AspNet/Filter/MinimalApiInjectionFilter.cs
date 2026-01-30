@@ -21,7 +21,7 @@ file sealed class MinimalApiInjectionFilter : IRootServiceInfoFilter
         serviceInfos.Where(s => TypesInjectedIntoMinimalApi.Contains(s.ServiceType));
 }
 
-public static class ServiceUsageVerifierExtensions
+public static partial class ServiceUsageVerifierExtensions
 {
     public static IServiceUsageVerifier RegisterMinimalApiInjectionRootServicesFilter(
         this IServiceUsageVerifier serviceUsageVerifier) =>

@@ -25,16 +25,19 @@ public static class AspNetIntegrationTests
                 .AddRazorPages()
                 .AddApplicationPart(typeof(TestPageModel).Assembly);
 
+            _builder.Services.AddHostedService<TestHostedService>();
+
             _builder.Services.AddTransient<IService1, Service1>();
             _builder.Services.AddTransient<IService2, Service2>();
             _builder.Services.AddTransient<IService3, Service3>();
             _builder.Services.AddTransient<IService4, Service4>();
             _builder.Services.AddTransient<IService5, Service5>();
+            _builder.Services.AddTransient<IService6, Service6>();
 
             _app = _builder.Build();
             _app.MapControllers();
 
-            _app.MapGet("/mini", MinimalApiHandler.Handle);
+            _app.MapGet("/mini", TestMinimalApiHandler.Handle);
             _app.MapGet("/mini", async (IService5 service) => await Task.FromResult(service.GetType().Name));
 
             await _app.StartAsync();
@@ -80,9 +83,11 @@ public static class AspNetIntegrationTests
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService4));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService5));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService6));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestController));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestPageModel));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(MinimalApiHandler));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestMinimalApiHandler));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestHostedService));
         }
     }
 }
