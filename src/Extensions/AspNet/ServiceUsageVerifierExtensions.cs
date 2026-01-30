@@ -1,4 +1,4 @@
-using System.Reflection;
+using GhostServiceBuster.AspNet.Filter;
 using GhostServiceBuster.MS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +37,7 @@ public static class ServiceUsageVerifierExtensions
         public IServiceUsageVerifier RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
             serviceUsageVerifier.RegisterControllersAsRootServices(services)
                 .RegisterPageModelsAsRootServices(services)
-                .RegisterMinimalApiHandlersAsRootServices(services)
+                .RegisterMinimalApiInjectionRootServicesFilter()
                 .RegisterHostedServicesAsRootServices(services)
                 //.RegisterMiddlewaresAsRootServices(services)
                 .RegisterEndpointFiltersAsRootServices(services)
@@ -61,17 +61,6 @@ public static class ServiceUsageVerifierExtensions
                     .OfType<AssemblyPart>()
                     .SelectMany(p => p.Types)
                     .Where(t => typeof(PageModel).IsAssignableFrom(t) && !t.IsAbstract));
-
-        private IServiceUsageVerifier RegisterMinimalApiHandlersAsRootServices(IServiceProvider services) =>
-            serviceUsageVerifier.RegisterRootServices(
-                services.GetRequiredService<EndpointDataSource>()
-                    .Endpoints
-                    .OfType<RouteEndpoint>()
-                    .SelectMany(e => e.Metadata)
-                    .OfType<MethodInfo>()
-                    .Select(m => m.DeclaringType)
-                    .Where(t => t is not null)
-                    .Distinct());
 
         private IServiceUsageVerifier RegisterHostedServicesAsRootServices(IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(

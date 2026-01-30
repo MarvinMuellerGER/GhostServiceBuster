@@ -13,31 +13,26 @@ public class ServiceResolutionGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var assemblyName = context
-            .CompilationProvider
-            .Select((c, _) => c.AssemblyName);
-
         var invocations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, _) => node is InvocationExpressionSyntax,
                 static (ctx, _) => GetTypesResolvedByServiceProvider(ctx))
-            .Where(static m => m is not null);
+            .Where(static m => m is not null)
+            .Select(static (types, _) => types!)
+            .Collect();
 
-        var combined = assemblyName.Combine(invocations.Collect());
-
-        context.RegisterSourceOutput(combined, GenerateSourceCode);
+        context.RegisterSourceOutput(invocations, GenerateSourceCode);
     }
 
     private static void GenerateSourceCode(
-        SourceProductionContext spc,
-        (string? AssemblyName, ImmutableArray<string?> TypesResolvedByServiceProvider) loadedData)
+        SourceProductionContext spc, ImmutableArray<string> typesResolvedByServiceProvider)
     {
         const string attributeNamespace = "GhostServiceBuster.MS.Generator";
         const string attributeName = "TypesResolvedByServiceProvider";
         const string attributeFullName = $"{attributeNamespace}.{attributeName}";
         const string fileName = $"{attributeName}.g.cs";
 
-        var types = loadedData.TypesResolvedByServiceProvider.OfType<string>()
+        var types = typesResolvedByServiceProvider
             .Distinct()
             .OrderBy(t => t)
             .ToList();

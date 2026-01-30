@@ -10,7 +10,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <RootNamespace>GhostServiceBuster.MS.Generator</RootNamespace>
-        <PackageId>MS.Generator</PackageId>
+        <PackageId>GhostServiceBuster.MS.Generator</PackageId>
         <Version>0.1.0</Version>
         <AssemblyName>GhostServiceBuster.MS.Generator</AssemblyName>
     </PropertyGroup>
@@ -20,12 +20,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\MS.Generator.Attributes\MS.Generator.Attributes.csproj" />
+        <ProjectReference Include="..\..\MS.Generator.Attributes\MS.Generator.Attributes.csproj"/>
     </ItemGroup>
-
 
 </Project>

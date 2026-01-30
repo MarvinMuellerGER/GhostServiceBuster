@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AspNet.Generator.Attributes\AspNet.Generator.Attributes.csproj" />
       <ProjectReference Include="..\MS\MS.csproj" />
       <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
       <ProjectReference Include="..\..\Core\Core.csproj" />
