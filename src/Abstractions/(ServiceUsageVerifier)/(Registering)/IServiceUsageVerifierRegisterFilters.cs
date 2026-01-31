@@ -23,6 +23,9 @@ public interface IServiceUsageVerifierRegisterFilters
 
     IServiceUsageVerifier RegisterAllServicesFilters(params IReadOnlyList<IServiceInfoFilter> allServicesFilters) =>
         RegisterFilters(allServicesFilters);
+    
+    IServiceUsageVerifier RegisterAllServicesFilter(IServiceInfoFilter allServicesFilter) =>
+        RegisterAllServicesFilters(allServicesFilter);
 
     IServiceUsageVerifier RegisterAllServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new();
@@ -37,6 +40,9 @@ public interface IServiceUsageVerifierRegisterFilters
 
     IServiceUsageVerifier RegisterRootServicesFilters(params IReadOnlyList<IServiceInfoFilter> rootServicesFilters) =>
         RegisterFilters(rootServicesFilters: rootServicesFilters);
+    
+    IServiceUsageVerifier RegisterRootServicesFilter(IServiceInfoFilter rootServicesFilter) =>
+        RegisterRootServicesFilters(rootServicesFilter);
 
     IServiceUsageVerifier RegisterRootServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new();
@@ -51,6 +57,9 @@ public interface IServiceUsageVerifierRegisterFilters
     IServiceUsageVerifier RegisterUnusedServicesFilters(
         params IReadOnlyList<IServiceInfoFilter> unusedServicesFilters) =>
         RegisterFilters(unusedServicesFilters: unusedServicesFilters);
+    
+    IServiceUsageVerifier RegisterUnusedServicesFilter(IServiceInfoFilter unusedServicesFilter) =>
+        RegisterUnusedServicesFilters(unusedServicesFilter);
 
     IServiceUsageVerifier RegisterUnusedServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new();

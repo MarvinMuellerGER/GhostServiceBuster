@@ -1,8 +1,6 @@
 ﻿<Solution>
   <Folder Name="/Extensions/">
     <Project Path="src\Extensions\Default\Default.csproj" />
-    <Project Path="src/Extensions/AspNet.Generator.Attributes/AspNet.Generator.Attributes.csproj" />
-    <Project Path="src/Extensions/AspNet.Generator/AspNet.Generator.csproj" />
     <Project Path="src\Extensions\AspNet\AspNet.csproj" />
     <Project Path="src\Extensions\MS\MS.csproj" />
     <Project Path="src\Extensions\MS.Generator\MS.Generator\MS.Generator.csproj" />

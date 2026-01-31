@@ -2,6 +2,8 @@ using GhostServiceBuster.AspNet;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.IntegrationTests.Testees;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.IntegrationTests.AspNet;
@@ -33,12 +35,15 @@ public static class AspNetIntegrationTests
             _builder.Services.AddTransient<IService4, Service4>();
             _builder.Services.AddTransient<IService5, Service5>();
             _builder.Services.AddTransient<IService6, Service6>();
+            _builder.Services.AddTransient<IService7, Service7>();
 
             _app = _builder.Build();
             _app.MapControllers();
 
-            _app.MapGet("/mini", TestMinimalApiHandler.Handle);
-            _app.MapGet("/mini", async (IService5 service) => await Task.FromResult(service.GetType().Name));
+            _app.MapGet("/mini", TestMinimalApiHandler.Handle).AddEndpointFilter<TestEndpointFilter>();
+            _app.MapGet("/mini",
+                async (IService5 service, [FromBody] IService7 fromBody) =>
+                await Task.FromResult(service.GetType().Name));
 
             await _app.StartAsync();
         }
@@ -77,8 +82,9 @@ public static class AspNetIntegrationTests
 
         private static void AssertServiceUsage(ServiceInfoSet unusedServices)
         {
-            unusedServices.Should().HaveCount(1);
+            unusedServices.Should().HaveCount(2);
             unusedServices.Should().Contain(s => s.ServiceType == typeof(IService1));
+            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService7));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService2));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService4));

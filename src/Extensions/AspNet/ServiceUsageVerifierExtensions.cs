@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
 
 namespace GhostServiceBuster.AspNet;
 
@@ -37,7 +36,7 @@ public static class ServiceUsageVerifierExtensions
         public IServiceUsageVerifier RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
             serviceUsageVerifier.RegisterControllersAsRootServices(services)
                 .RegisterPageModelsAsRootServices(services)
-                .RegisterMinimalApiInjectionRootServicesFilter()
+                .RegisterMinimalApiInjectionRootServicesFilter(services)
                 .RegisterHostedServiceRootServicesFilter()
                 //.RegisterMiddlewaresAsRootServices(services)
                 .RegisterEndpointFiltersAsRootServices(services)
