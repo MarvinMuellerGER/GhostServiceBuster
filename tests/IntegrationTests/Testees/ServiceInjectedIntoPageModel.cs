@@ -1,0 +1,5 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+public interface IServiceInjectedIntoPageModel;
+
+internal sealed class ServiceInjectedIntoPageModel : IServiceInjectedIntoPageModel;

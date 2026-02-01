@@ -29,22 +29,25 @@ public static class AspNetIntegrationTests
 
             _builder.Services.AddHostedService<TestHostedService>();
 
-            _builder.Services.AddTransient<IService1, Service1>();
-            _builder.Services.AddTransient<IService2, Service2>();
-            _builder.Services.AddTransient<IService3, Service3>();
-            _builder.Services.AddTransient<IService4, Service4>();
-            _builder.Services.AddTransient<IService5, Service5>();
-            _builder.Services.AddTransient<IService6, Service6>();
-            _builder.Services.AddTransient<IService7, Service7>();
-            _builder.Services.AddTransient<IService8, Service8>();
+            _builder.Services
+                .AddTransient<IService1, Service1>()
+                .AddTransient<IServiceInjectedIntoController, ServiceInjectedIntoController>()
+                .AddTransient<IServiceInjectedIntoPageModel, ServiceInjectedIntoPageModel>()
+                .AddTransient<IServiceInjectedIntoHostedService, ServiceInjectedIntoHostedService>()
+                .AddTransient<IServiceInjectedIntoMinimalApiHandler, ServiceInjectedIntoMinimalApiHandler>()
+                .AddTransient<IServiceInjectedIntoMinimalApiLambda, ServiceInjectedIntoMinimalApiLambda>()
+                .AddTransient<IServiceInjectedIntoMinimalApiLambdaFromBody,
+                    ServiceInjectedIntoMinimalApiLambdaFromBody>()
+                .AddTransient<IServiceInjectedIntoEndpointFilter, ServiceInjectedIntoEndpointFilter>();
 
             _app = _builder.Build();
             _app.MapControllers();
 
             _app.MapGet("/mini", TestMinimalApiHandler.Handle).AddEndpointFilter<TestEndpointFilter>();
             _app.MapGet("/mini",
-                async (IService5 service, [FromBody] IService7 fromBody) =>
-                await Task.FromResult(service.GetType().Name));
+                async (IServiceInjectedIntoMinimalApiLambda service,
+                        [FromBody] IServiceInjectedIntoMinimalApiLambdaFromBody fromBody) =>
+                    await Task.FromResult(service.GetType().Name));
 
             await _app.StartAsync();
         }
@@ -85,13 +88,13 @@ public static class AspNetIntegrationTests
         {
             unusedServices.Should().HaveCount(2);
             unusedServices.Should().Contain(s => s.ServiceType == typeof(IService1));
-            unusedServices.Should().Contain(s => s.ServiceType == typeof(IService7));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService2));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService3));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService4));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService5));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService6));
-            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService8));
+            unusedServices.Should().Contain(s => s.ServiceType == typeof(IServiceInjectedIntoMinimalApiLambdaFromBody));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoController));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoPageModel));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoMinimalApiHandler));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoMinimalApiLambda));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoHostedService));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IServiceInjectedIntoEndpointFilter));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestController));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestPageModel));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestMinimalApiHandler));

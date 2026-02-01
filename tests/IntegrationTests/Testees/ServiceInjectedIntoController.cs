@@ -1,0 +1,5 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+public interface IServiceInjectedIntoController;
+
+internal sealed class ServiceInjectedIntoController : IServiceInjectedIntoController;

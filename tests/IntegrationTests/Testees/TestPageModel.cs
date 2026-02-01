@@ -4,4 +4,4 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GhostServiceBuster.IntegrationTests.Testees;
 
-public sealed class TestPageModel(IService3 service3) : PageModel;
+public sealed class TestPageModel(IServiceInjectedIntoPageModel service3) : PageModel;

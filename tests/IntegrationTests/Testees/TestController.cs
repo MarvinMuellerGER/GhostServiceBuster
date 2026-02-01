@@ -4,7 +4,7 @@ namespace GhostServiceBuster.IntegrationTests.Testees;
 
 [ApiController]
 [Route("test")]
-public sealed class TestController(IService2 service) : ControllerBase
+public sealed class TestController(IServiceInjectedIntoController service) : ControllerBase
 {
     [HttpGet]
     public string Test() => service.GetType().Name;

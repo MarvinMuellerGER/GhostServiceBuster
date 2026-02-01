@@ -1,0 +1,5 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+public interface IServiceInjectedIntoEndpointFilter;
+
+internal sealed class ServiceInjectedIntoEndpointFilter: IServiceInjectedIntoEndpointFilter;

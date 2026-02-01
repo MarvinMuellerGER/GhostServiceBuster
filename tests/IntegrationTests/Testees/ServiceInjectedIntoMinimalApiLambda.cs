@@ -1,0 +1,5 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+public interface IServiceInjectedIntoMinimalApiLambda;
+
+internal sealed class ServiceInjectedIntoMinimalApiLambda: IServiceInjectedIntoMinimalApiLambda;

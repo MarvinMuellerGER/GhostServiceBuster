@@ -1,0 +1,5 @@
+namespace GhostServiceBuster.IntegrationTests.Testees;
+
+public interface IServiceInjectedIntoMinimalApiHandler;
+
+internal sealed class ServiceInjectedIntoMinimalApiHandler : IServiceInjectedIntoMinimalApiHandler;
