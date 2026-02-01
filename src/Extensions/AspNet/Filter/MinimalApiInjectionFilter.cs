@@ -1,5 +1,6 @@
 using System.Collections.Frozen;
 using System.Reflection;
+using GhostServiceBuster.AspNet.Utils;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -27,12 +28,6 @@ file sealed class MinimalApiInjectionFilter(IServiceProvider services) : IRootSe
 
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfos) =>
         serviceInfos.Where(s => TypesInjectedIntoMinimalApi.Contains(s.ServiceType));
-}
-
-file static class ParameterInfoExtensions
-{
-    public static IEnumerable<T> GetCustomAttributes<T>(this ParameterInfo element) =>
-        element.GetCustomAttributes(typeof(T), true).OfType<T>();
 }
 
 public static partial class ServiceUsageVerifierExtensions

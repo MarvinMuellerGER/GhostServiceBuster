@@ -36,6 +36,7 @@ public static class AspNetIntegrationTests
             _builder.Services.AddTransient<IService5, Service5>();
             _builder.Services.AddTransient<IService6, Service6>();
             _builder.Services.AddTransient<IService7, Service7>();
+            _builder.Services.AddTransient<IService8, Service8>();
 
             _app = _builder.Build();
             _app.MapControllers();
@@ -90,6 +91,7 @@ public static class AspNetIntegrationTests
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService4));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService5));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService6));
+            unusedServices.Should().NotContain(s => s.ServiceType == typeof(IService8));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestController));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestPageModel));
             unusedServices.Should().NotContain(s => s.ServiceType == typeof(TestMinimalApiHandler));

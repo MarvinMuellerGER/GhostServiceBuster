@@ -1,4 +1,5 @@
 using GhostServiceBuster.AspNet.Filter;
+using GhostServiceBuster.AspNet.Utils;
 using GhostServiceBuster.MS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -39,7 +39,7 @@ public static class ServiceUsageVerifierExtensions
                 .RegisterMinimalApiInjectionRootServicesFilter(services)
                 .RegisterHostedServiceRootServicesFilter()
                 //.RegisterMiddlewaresAsRootServices(services)
-                .RegisterEndpointFiltersAsRootServices(services)
+                .RegisterEndpointFiltersAsRootServices()
                 .RegisterAuthorizationHandlersAsRootServices(services)
                 //.RegisterHealthChecksAsRootServices(services)
                 .RegisterViewComponentsAsRootServices(services)
@@ -70,13 +70,8 @@ public static class ServiceUsageVerifierExtensions
                             .Any(p => p.ParameterType == typeof(RequestDelegate))))
                     .Distinct());
 
-        private IServiceUsageVerifier RegisterEndpointFiltersAsRootServices(IServiceProvider services) =>
-            serviceUsageVerifier.RegisterRootServices(
-                services.GetRequiredService<EndpointDataSource>()
-                    .Endpoints
-                    .SelectMany(e => e.Metadata.OfType<IEndpointFilter>())
-                    .Select(f => f.GetType())
-                    .Distinct());
+        private IServiceUsageVerifier RegisterEndpointFiltersAsRootServices() =>
+            serviceUsageVerifier.RegisterRootServices(AspNetTypesProvider.EndpointFilters);
 
         private IServiceUsageVerifier RegisterAuthorizationHandlersAsRootServices(IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
