@@ -26,9 +26,10 @@ file static class ServiceDescriptorEnumerableExtensions
 
 public static class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterServiceCollectionServiceInfoExtractor(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
-        serviceUsageVerifier
+    public static TServiceUsageVerifier RegisterServiceCollectionServiceInfoExtractor<TServiceUsageVerifier>(
+        this TServiceUsageVerifier serviceUsageVerifier)
+        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable =>
+        (TServiceUsageVerifier)serviceUsageVerifier
             .RegisterServiceInfoExtractor<ServiceCollectionServiceInfoExtractor, IServiceCollection>()
             .RegisterServiceInfoExtractor<ServiceProviderServiceInfoExtractor, IServiceProvider>();
 }

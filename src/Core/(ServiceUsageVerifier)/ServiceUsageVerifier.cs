@@ -21,7 +21,8 @@ internal sealed partial class ServiceUsageVerifier(
     [Tag(Unused)] IFilterCacheHandler unusedServicesFilterCacheHandler,
     [Tag(All)] IServiceAndFilterCacheHandler allServicesAndFilterCacheHandler,
     IRootServiceAndFilterCacheHandler rootServicesAndFilterCacheHandler,
-    [Tag(Unused)] IServiceAndFilterCacheHandler unusedServicesAndFilterCacheHandler) : IServiceUsageVerifier
+    [Tag(Unused)] IServiceAndFilterCacheHandler unusedServicesAndFilterCacheHandler)
+    : IServiceUsageVerifierWithCachedServicesAndFiltersMutable
 {
     public IServiceUsageVerifier FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
         out ServiceInfoSet unusedServices,

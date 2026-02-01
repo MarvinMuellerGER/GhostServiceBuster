@@ -1,8 +1,10 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028reading_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028reading_0029_005C_0028withcachedfilters_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028reading_0029_005C_0028withcachedservicesandfilters_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028reading_0029_005C_0028withcachedservices_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028reading_0029_005C_0028withoutcaches_0029/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028registering_0029/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028immutable_0029_005C_0028withcachedfilters_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028immutable_0029_005C_0028withcachedservices_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028immutable_0029_005C_0028withcachedservicesandfilters_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028immutable_0029_005C_0028withoutcaches_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028mutable_0029_005C_0028withcachedfilters_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028mutable_0029_005C_0028withcachedservices_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028mutable_0029_005C_0028withcachedservicesandfilters_0029/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=_0028serviceusageverifier_0029_005C_0028mutable_0029_005C_0028withoutcaches_0029/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

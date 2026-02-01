@@ -7,7 +7,7 @@ namespace GhostServiceBuster;
 
 internal sealed partial class ServiceUsageVerifier
 {
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+    public IServiceUsageVerifierWithoutCachesMutable RegisterServiceInfoExtractor<TServiceCollection>(
         IServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {
@@ -16,7 +16,8 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>()
+    public IServiceUsageVerifierWithoutCachesMutable
+        RegisterServiceInfoExtractor<TServiceInfoExtractor, TServiceCollection>()
         where TServiceInfoExtractor : IServiceInfoExtractor<TServiceCollection>, new()
         where TServiceCollection : notnull
     {
@@ -25,7 +26,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+    public IServiceUsageVerifierWithoutCachesMutable RegisterServiceInfoExtractor<TServiceCollection>(
         ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {
@@ -34,7 +35,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollection>(
+    public IServiceUsageVerifierWithoutCachesMutable RegisterServiceInfoExtractor<TServiceCollection>(
         ServiceInfoTupleExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {
@@ -43,7 +44,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterServiceInfoExtractor<TServiceCollectionItem>(
+    public IServiceUsageVerifierWithoutCachesMutable RegisterServiceInfoExtractor<TServiceCollectionItem>(
         EnumerableServiceInfoExtractor<TServiceCollectionItem> extractor)
         where TServiceCollectionItem : notnull
     {
@@ -52,28 +53,37 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterDependencyDetector(DependencyDetector dependencyDetector)
+    public IServiceUsageVerifierWithoutCachesMutable RegisterDependencyDetector(DependencyDetector dependencyDetector)
     {
         unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
 
         return this;
     }
 
-    public IServiceUsageVerifier RegisterDependencyDetector(IDependencyDetector dependencyDetector)
+    public IServiceUsageVerifierWithoutCachesMutable RegisterDependencyDetector<TDependencyDetector>()
+        where TDependencyDetector : IDependencyDetector, new()
+    {
+        unusedServiceDetector.RegisterDependencyDetector<TDependencyDetector>();
+
+        return this;
+    }
+
+    public IServiceUsageVerifierWithoutCachesMutable RegisterDependencyDetector(IDependencyDetector dependencyDetector)
     {
         unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
 
         return this;
     }
 
-    public IServiceUsageVerifier RegisterDependencyDetector(DependencyDetectorTupleResult dependencyDetector)
+    public IServiceUsageVerifierWithoutCachesMutable RegisterDependencyDetector(
+        DependencyDetectorTupleResult dependencyDetector)
     {
         unusedServiceDetector.RegisterDependencyDetector(dependencyDetector);
 
         return this;
     }
 
-    public IServiceUsageVerifier RegisterFilters(
+    public IServiceUsageVerifierWithCachedFiltersMutable RegisterFilters(
         ServiceInfoFilterInfoList? allServicesFilters,
         ServiceInfoFilterInfoList? rootServicesFilters,
         ServiceInfoFilterInfoList? unusedServicesFilters)
@@ -85,7 +95,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    IServiceUsageVerifier IServiceUsageVerifierRegisterFilters.RegisterFilters(
+    IServiceUsageVerifierWithCachedFiltersMutable IServiceUsageVerifierWithoutCachesMutable.RegisterFilters(
         IReadOnlyList<IServiceInfoFilter>? allServicesFilters,
         IReadOnlyList<IServiceInfoFilter>? rootServicesFilters,
         IReadOnlyList<IServiceInfoFilter>? unusedServicesFilters)
@@ -97,7 +107,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterAllServicesFilter<TServiceInfoFilter>()
+    public IServiceUsageVerifierWithCachedFiltersMutable RegisterAllServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new()
     {
         allServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
@@ -105,7 +115,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterRootServicesFilter<TServiceInfoFilter>()
+    public IServiceUsageVerifierWithCachedFiltersMutable RegisterRootServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new()
     {
         rootServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
@@ -113,7 +123,7 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterUnusedServicesFilter<TServiceInfoFilter>()
+    public IServiceUsageVerifierWithCachedFiltersMutable RegisterUnusedServicesFilter<TServiceInfoFilter>()
         where TServiceInfoFilter : IServiceInfoFilter, new()
     {
         unusedServicesFilterCacheHandler.RegisterFilter<TServiceInfoFilter>();
@@ -121,9 +131,10 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier RegisterServices<TAllServicesCollection, TRootServicesCollection>(
-        TAllServicesCollection? allServices,
-        TRootServicesCollection? rootServices)
+    public IServiceUsageVerifierWithCachedServicesMutable
+        RegisterServices<TAllServicesCollection, TRootServicesCollection>(
+            TAllServicesCollection? allServices,
+            TRootServicesCollection? rootServices)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {
@@ -133,9 +144,10 @@ internal sealed partial class ServiceUsageVerifier
         return this;
     }
 
-    public IServiceUsageVerifier LazyRegisterServices<TAllServicesCollection, TRootServicesCollection>(
-        Func<TAllServicesCollection>? getAllServicesAction = null,
-        Func<TRootServicesCollection>? getRootServicesAction = null)
+    public IServiceUsageVerifierWithCachedServicesMutable
+        LazyRegisterServices<TAllServicesCollection, TRootServicesCollection>(
+            Func<TAllServicesCollection>? getAllServicesAction = null,
+            Func<TRootServicesCollection>? getRootServicesAction = null)
         where TAllServicesCollection : notnull
         where TRootServicesCollection : notnull
     {

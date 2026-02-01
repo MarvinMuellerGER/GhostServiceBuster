@@ -17,23 +17,28 @@ namespace GhostServiceBuster.AspNet;
 
 public static class ServiceUsageVerifierExtensions
 {
-    extension(IServiceUsageVerifier serviceUsageVerifier)
+    extension<TServiceUsageVerifier>(TServiceUsageVerifier serviceUsageVerifier)
+        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable
     {
-        public IServiceUsageVerifier ForAspNet(WebApplication app, IServiceCollection services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNet(
+            WebApplication app, IServiceCollection services) =>
             serviceUsageVerifier.ForAspNet(app.Services, services);
 
-        public IServiceUsageVerifier ForAspNet(IServiceProvider serviceProvider, IServiceCollection services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNet(
+            IServiceProvider serviceProvider, IServiceCollection services) =>
             serviceUsageVerifier.ForServiceCollection(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(serviceProvider);
 
-        public IServiceUsageVerifier ForAspNetUnsafe(WebApplication app) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNetUnsafe(WebApplication app) =>
             serviceUsageVerifier.ForAspNetUnsafe(app.Services);
 
-        public IServiceUsageVerifier ForAspNetUnsafe(IServiceProvider services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNetUnsafe(IServiceProvider services) =>
             serviceUsageVerifier.ForServiceProviderUnsafe(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(services);
 
-        public IServiceUsageVerifier RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+            RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
+            (IServiceUsageVerifierWithCachedServicesAndFiltersMutable)
             serviceUsageVerifier.RegisterControllersAsRootServices(services)
                 .RegisterPageModelsAsRootServices(services)
                 .RegisterMinimalApiInjectionRootServicesFilter(services)
@@ -45,7 +50,8 @@ public static class ServiceUsageVerifierExtensions
                 .RegisterViewComponentsAsRootServices(services)
                 .RegisterTagHelpersAsRootServices(services);
 
-        private IServiceUsageVerifier RegisterControllersAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterControllersAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetRequiredService<IActionDescriptorCollectionProvider>()
                     .ActionDescriptors.Items
@@ -53,7 +59,8 @@ public static class ServiceUsageVerifierExtensions
                     .Select(a => a.ControllerTypeInfo)
                     .Distinct());
 
-        private IServiceUsageVerifier RegisterPageModelsAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterPageModelsAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetRequiredService<ApplicationPartManager>()
                     .ApplicationParts
@@ -61,7 +68,8 @@ public static class ServiceUsageVerifierExtensions
                     .SelectMany(p => p.Types)
                     .Where(t => typeof(PageModel).IsAssignableFrom(t) && !t.IsAbstract));
 
-        private IServiceUsageVerifier RegisterMiddlewaresAsRootServices(IServiceCollection services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterMiddlewaresAsRootServices(
+            IServiceCollection services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.Select(s => s.ImplementationType)
                     .OfType<Type>()
@@ -70,16 +78,18 @@ public static class ServiceUsageVerifierExtensions
                             .Any(p => p.ParameterType == typeof(RequestDelegate))))
                     .Distinct());
 
-        private IServiceUsageVerifier RegisterEndpointFiltersAsRootServices() =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterEndpointFiltersAsRootServices() =>
             serviceUsageVerifier.RegisterRootServices(AspNetTypesProvider.EndpointFilters);
 
-        private IServiceUsageVerifier RegisterAuthorizationHandlersAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterAuthorizationHandlersAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetServices<IAuthorizationHandler>()
                     .Select(h => h.GetType())
                     .Distinct());
 
-        private IServiceUsageVerifier RegisterHealthChecksAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterHealthChecksAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetRequiredService<HealthCheckService>()
                     .GetType().Assembly
@@ -88,7 +98,8 @@ public static class ServiceUsageVerifierExtensions
                         typeof(IHealthCheck).IsAssignableFrom(t) && t is { IsClass: true, IsAbstract: false })
                     .Distinct());
 
-        private IServiceUsageVerifier RegisterViewComponentsAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterViewComponentsAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetRequiredService<ApplicationPartManager>()
                     .ApplicationParts
@@ -96,7 +107,8 @@ public static class ServiceUsageVerifierExtensions
                     .SelectMany(p => p.Types)
                     .Where(t => typeof(ViewComponent).IsAssignableFrom(t)));
 
-        private IServiceUsageVerifier RegisterTagHelpersAsRootServices(IServiceProvider services) =>
+        private IServiceUsageVerifierWithCachedServicesMutable RegisterTagHelpersAsRootServices(
+            IServiceProvider services) =>
             serviceUsageVerifier.RegisterRootServices(
                 services.GetRequiredService<ApplicationPartManager>()
                     .ApplicationParts

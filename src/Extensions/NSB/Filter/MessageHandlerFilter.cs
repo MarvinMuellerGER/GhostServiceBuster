@@ -17,7 +17,12 @@ file class MessageHandlerFilter : IRootServiceInfoFilter
 
 public static class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterNServiceBusMessageHandlerRootServicesFilter(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
+    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterNServiceBusMessageHandlerRootServicesFilter(
+        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
+        serviceUsageVerifier.RegisterRootServicesFilter<MessageHandlerFilter>();
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+        RegisterNServiceBusMessageHandlerRootServicesFilter(
+            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
         serviceUsageVerifier.RegisterRootServicesFilter<MessageHandlerFilter>();
 }

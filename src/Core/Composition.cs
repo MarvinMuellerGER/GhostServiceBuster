@@ -16,7 +16,8 @@ internal sealed partial class Composition
     [Conditional("DI")]
     // ReSharper disable once UnusedMember.Local
     private static void Setup() => DI.Setup().Hint(Hint.Resolve, "OFF")
-        .RootBind<IServiceUsageVerifier>(nameof(ServiceUsageVerifier)).To<ServiceUsageVerifier>()
+        .RootBind<IServiceUsageVerifierWithCachedServicesAndFiltersMutable>(nameof(ServiceUsageVerifier))
+        .To<ServiceUsageVerifier>()
         .Bind<IUnusedServiceDetector>().As(Singleton).To<UnusedServiceDetector>()
         .Bind<IServiceInfoExtractorHandler>().As(PerResolve).To<ServiceInfoExtractorHandler>()
         .Bind<IFilterHandler>().As(Singleton).To<FilterHandler>()

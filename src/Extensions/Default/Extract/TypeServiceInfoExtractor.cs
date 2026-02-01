@@ -11,7 +11,8 @@ file sealed class TypeServiceInfoExtractor : IServiceInfoExtractor<Type>
 
 public static class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterTypeServiceInfoExtractor(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterServiceInfoExtractor<TypeServiceInfoExtractor, Type>();
+    public static TServiceUsageVerifier RegisterTypeServiceInfoExtractor<TServiceUsageVerifier>(
+        this TServiceUsageVerifier serviceUsageVerifier)
+        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable =>
+        (TServiceUsageVerifier)serviceUsageVerifier.RegisterServiceInfoExtractor<TypeServiceInfoExtractor, Type>();
 }

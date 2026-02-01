@@ -2,7 +2,7 @@ using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster;
 
-public interface IServiceUsageVerifierWithoutCachesFluently
+public interface IServiceUsageVerifierWithoutCachesFluently : IServiceUsageVerifier
 {
     IServiceUsageVerifier FindUnusedServicesUsingOnlyOneTimeServicesAndFilters<
         TAllServicesCollection, TRootServicesCollection>(

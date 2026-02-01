@@ -2,5 +2,5 @@ namespace GhostServiceBuster;
 
 public static class Verify
 {
-    public static IServiceUsageVerifier New => Composition.Instance.ServiceUsageVerifier;
+    public static IServiceUsageVerifierWithoutCachesMutable New => Composition.Instance.ServiceUsageVerifier;
 }

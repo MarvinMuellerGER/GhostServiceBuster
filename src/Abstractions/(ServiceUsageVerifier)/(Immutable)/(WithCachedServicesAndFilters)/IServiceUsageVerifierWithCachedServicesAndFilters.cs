@@ -3,7 +3,8 @@ using GhostServiceBuster.Collections;
 namespace GhostServiceBuster;
 
 public interface IServiceUsageVerifierWithCachedServicesAndFilters
-    : IServiceUsageVerifierWithCachedServicesAndFiltersFluently
+    : IServiceUsageVerifierWithCachedServicesAndFiltersFluently,
+        IServiceUsageVerifierWithCachedFilters, IServiceUsageVerifierWithCachedServices
 {
     ServiceInfoSet FindUnusedServices<TAllServicesCollection, TRootServicesCollection>(
         in TAllServicesCollection? oneTimeAllServices = default,

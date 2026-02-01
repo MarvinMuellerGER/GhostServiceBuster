@@ -32,7 +32,12 @@ file sealed class MinimalApiInjectionFilter(IServiceProvider services) : IRootSe
 
 public static partial class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterMinimalApiInjectionRootServicesFilter(
-        this IServiceUsageVerifier serviceUsageVerifier, IServiceProvider services) =>
+    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterMinimalApiInjectionRootServicesFilter(
+        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier, IServiceProvider services) =>
+        serviceUsageVerifier.RegisterRootServicesFilter(new MinimalApiInjectionFilter(services));
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+        RegisterMinimalApiInjectionRootServicesFilter(
+            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier, IServiceProvider services) =>
         serviceUsageVerifier.RegisterRootServicesFilter(new MinimalApiInjectionFilter(services));
 }

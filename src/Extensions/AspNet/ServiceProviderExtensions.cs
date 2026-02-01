@@ -6,10 +6,11 @@ public static class ServiceProviderExtensions
 {
     extension(IServiceProvider serviceProvider)
     {
-        public IServiceUsageVerifier CreateServiceUsageVerifier(IServiceCollection services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable CreateServiceUsageVerifier(
+            IServiceCollection services) =>
             Verify.New.ForAspNet(serviceProvider, services);
 
-        public IServiceUsageVerifier CreateServiceUsageVerifierUnsafe() =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable CreateServiceUsageVerifierUnsafe() =>
             Verify.New.ForAspNetUnsafe(serviceProvider);
     }
 }

@@ -1,6 +1,5 @@
 using GhostServiceBuster.IntegrationTests.Testees;
-using GhostServiceBuster.MS;
-using GhostServiceBuster.NServiceBus.Filter;
+using GhostServiceBuster.NServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.IntegrationTests.NSB;
@@ -9,9 +8,8 @@ public static class NServiceBusMessageHandlerIntegrationTests
 {
     private static readonly IServiceCollection ServiceCollection = new ServiceCollection();
 
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = ServiceCollection
-        .CreateServiceUsageVerifier()
-        .RegisterNServiceBusMessageHandlerRootServicesFilter();
+    private static readonly IServiceUsageVerifierWithCachedServicesAndFiltersMutable ServiceUsageVerifier =
+        ServiceCollection.CreateServiceUsageVerifierForNServiceBus();
 
     public sealed class FindUnusedServices
     {

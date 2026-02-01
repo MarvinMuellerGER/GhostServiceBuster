@@ -23,7 +23,12 @@ file sealed class ServiceProviderUsageFilter : IRootServiceInfoFilter
 
 public static partial class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterServiceProviderUsageRootServicesFilter(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
+    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterServiceProviderUsageRootServicesFilter(
+        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
+        serviceUsageVerifier.RegisterRootServicesFilter<ServiceProviderUsageFilter>();
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+        RegisterServiceProviderUsageRootServicesFilter(
+            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
         serviceUsageVerifier.RegisterRootServicesFilter<ServiceProviderUsageFilter>();
 }

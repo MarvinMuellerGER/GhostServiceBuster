@@ -1,6 +1,3 @@
 namespace GhostServiceBuster;
 
-public interface IServiceUsageVerifier : IServiceUsageVerifierImmutable, IServiceUsageVerifierRegistering
-{
-    IServiceUsageVerifierImmutable AsImmutable() => this;
-}
+public interface IServiceUsageVerifier;

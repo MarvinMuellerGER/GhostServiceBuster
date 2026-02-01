@@ -16,7 +16,12 @@ file sealed class HostedServiceFilter : IRootServiceInfoFilter
 
 public static partial class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterHostedServiceRootServicesFilter(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
+    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterHostedServiceRootServicesFilter(
+        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
+        serviceUsageVerifier.RegisterRootServicesFilter<HostedServiceFilter>();
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+        RegisterHostedServiceRootServicesFilter(
+            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
         serviceUsageVerifier.RegisterRootServicesFilter<HostedServiceFilter>();
 }

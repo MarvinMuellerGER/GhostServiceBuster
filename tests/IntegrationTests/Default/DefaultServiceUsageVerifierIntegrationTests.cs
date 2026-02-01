@@ -7,7 +7,7 @@ namespace GhostServiceBuster.IntegrationTests.Default;
 
 public static class DefaultServiceUsageVerifierIntegrationTests
 {
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = Verify.New.Default();
+    private static readonly IServiceUsageVerifierWithoutCachesMutable ServiceUsageVerifier = Verify.New.Default();
 
     public sealed class FindUnusedServicesUsingOnlyOneTimeFilters
     {

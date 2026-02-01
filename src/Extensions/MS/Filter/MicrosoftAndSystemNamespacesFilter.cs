@@ -13,7 +13,12 @@ file sealed class MicrosoftAndSystemNamespacesFilter : IServiceInfoFilter
 
 public static partial class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterMicrosoftAndSystemNamespacesAllServicesFilter(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
+    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterMicrosoftAndSystemNamespacesAllServicesFilter(
+        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
+        serviceUsageVerifier.RegisterAllServicesFilter<MicrosoftAndSystemNamespacesFilter>();
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
+        RegisterMicrosoftAndSystemNamespacesAllServicesFilter(
+            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
         serviceUsageVerifier.RegisterAllServicesFilter<MicrosoftAndSystemNamespacesFilter>();
 }

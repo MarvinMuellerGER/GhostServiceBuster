@@ -5,6 +5,8 @@ namespace GhostServiceBuster.Default;
 
 public static class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier Default(this IServiceUsageVerifier serviceUsageVerifier) =>
+    public static TServiceUsageVerifier Default<TServiceUsageVerifier>(
+        this TServiceUsageVerifier serviceUsageVerifier)
+        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable =>
         serviceUsageVerifier.RegisterTypeServiceInfoExtractor().RegisterConstructorInjectionDetector();
 }

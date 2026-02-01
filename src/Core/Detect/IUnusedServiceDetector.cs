@@ -5,6 +5,9 @@ namespace GhostServiceBuster.Detect;
 internal interface IUnusedServiceDetector
 {
     void RegisterDependencyDetector(DependencyDetector dependencyDetector);
+    
+    void RegisterDependencyDetector<TDependencyDetector>() where TDependencyDetector : IDependencyDetector, new() =>
+        RegisterDependencyDetector(new TDependencyDetector());
 
     void RegisterDependencyDetector(IDependencyDetector dependencyDetector) =>
         RegisterDependencyDetector((servicesToAnalyse, potentialDependencies) =>

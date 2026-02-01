@@ -7,7 +7,9 @@ namespace GhostServiceBuster.IntegrationTests.MS;
 public static class ServiceCollectionIntegrationTests
 {
     private static readonly IServiceCollection ServiceCollection = new ServiceCollection();
-    private static readonly IServiceUsageVerifier ServiceUsageVerifier = ServiceCollection.CreateServiceUsageVerifier();
+
+    private static readonly IServiceUsageVerifierWithCachedServicesAndFiltersMutable ServiceUsageVerifier =
+        ServiceCollection.CreateServiceUsageVerifier();
 
     public sealed class FindUnusedServices
     {

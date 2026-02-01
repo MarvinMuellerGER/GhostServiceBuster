@@ -34,7 +34,8 @@ file sealed class ConstructorInjectionDetector : IDependencyDetector
 
 public static class ServiceUsageVerifierExtensions
 {
-    public static IServiceUsageVerifier RegisterConstructorInjectionDetector(
-        this IServiceUsageVerifier serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterDependencyDetector(new ConstructorInjectionDetector());
+    public static TServiceUsageVerifier RegisterConstructorInjectionDetector<TServiceUsageVerifier>(
+        this TServiceUsageVerifier serviceUsageVerifier)
+        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable =>
+        (TServiceUsageVerifier)serviceUsageVerifier.RegisterDependencyDetector<ConstructorInjectionDetector>();
 }

@@ -7,22 +7,27 @@ namespace GhostServiceBuster.MS;
 
 public static class ServiceUsageVerifierExtensions
 {
-    extension(IServiceUsageVerifier serviceUsageVerifier)
+    extension(IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier)
     {
-        public IServiceUsageVerifier ForServiceProviderUnsafe(IServiceProvider services) =>
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForServiceProviderUnsafe(
+            IServiceProvider services) =>
             serviceUsageVerifier.ForServiceCollection()
                 .LazyRegisterAllServices(() => services);
 
-        public IServiceUsageVerifier ForServiceCollection(IServiceCollection services)
-        {
-            return serviceUsageVerifier.ForServiceCollection()
+        public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForServiceCollection(
+            IServiceCollection services) =>
+            serviceUsageVerifier.ForServiceCollection()
                 .LazyRegisterAllServices(() => services);
-        }
 
-        public IServiceUsageVerifier ForServiceCollection() =>
+        public IServiceUsageVerifierWithCachedFiltersMutable ForServiceCollection() =>
             serviceUsageVerifier.Default()
                 .RegisterServiceCollectionServiceInfoExtractor()
                 .RegisterServiceProviderUsageRootServicesFilter()
                 .RegisterMicrosoftAndSystemNamespacesAllServicesFilter();
     }
+
+    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForServiceCollection(
+        this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
+        (IServiceUsageVerifierWithCachedServicesAndFiltersMutable)
+        ((IServiceUsageVerifierWithCachedFiltersMutable)serviceUsageVerifier).ForServiceCollection();
 }
