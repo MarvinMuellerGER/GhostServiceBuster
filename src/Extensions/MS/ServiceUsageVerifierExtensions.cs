@@ -1,6 +1,4 @@
 using GhostServiceBuster.Default;
-using GhostServiceBuster.MS.Extract;
-using GhostServiceBuster.MS.Filter;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.MS;
@@ -22,6 +20,7 @@ public static class ServiceUsageVerifierExtensions
         public IServiceUsageVerifierWithCachedFiltersMutable ForServiceCollection() =>
             serviceUsageVerifier.Default()
                 .RegisterServiceCollectionServiceInfoExtractor()
+                .RegisterServiceProviderServiceInfoExtractor()
                 .RegisterServiceProviderUsageRootServicesFilter()
                 .RegisterMicrosoftAndSystemNamespacesAllServicesFilter();
     }

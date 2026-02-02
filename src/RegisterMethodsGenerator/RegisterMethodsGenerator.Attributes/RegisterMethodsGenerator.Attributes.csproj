@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IsPackable>false</IsPackable>
+        <LangVersion>latest</LangVersion>
+
+        <RootNamespace>GhostServiceBuster.RegisterMethodsGenerator</RootNamespace>
+        <AssemblyName>GhostServiceBuster.RegisterMethodsGenerator.Attributes</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

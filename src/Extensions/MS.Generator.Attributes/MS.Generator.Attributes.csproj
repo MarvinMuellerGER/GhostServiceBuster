@@ -2,10 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>GhostServiceBuster.MS.Generator</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>default</LangVersion>
+
+        <RootNamespace>GhostServiceBuster.MS.Generator</RootNamespace>
         <AssemblyName>GhostServiceBuster.MS.Generator.Attributes</AssemblyName>
     </PropertyGroup>
 

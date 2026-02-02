@@ -1,9 +1,11 @@
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Detect;
+using GhostServiceBuster.RegisterMethodsGenerator;
 
 namespace GhostServiceBuster.Default.Detect;
 
-file sealed class ConstructorInjectionDetector : IDependencyDetector
+[GenerateRegisterMethodFor]
+internal sealed class ConstructorInjectionDetector : IDependencyDetector
 {
     /// <summary>
     ///     Finds services from the source list that are injected into any service in the target list.
@@ -30,12 +32,4 @@ file sealed class ConstructorInjectionDetector : IDependencyDetector
 
     private static bool MatchesTypeOrGenericDefinition(Type type, Func<Type, bool> matcher) =>
         matcher(type) || (type.IsGenericType && matcher(type.GetGenericTypeDefinition()));
-}
-
-public static class ServiceUsageVerifierExtensions
-{
-    public static TServiceUsageVerifier RegisterConstructorInjectionDetector<TServiceUsageVerifier>(
-        this TServiceUsageVerifier serviceUsageVerifier)
-        where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable =>
-        (TServiceUsageVerifier)serviceUsageVerifier.RegisterDependencyDetector<ConstructorInjectionDetector>();
 }

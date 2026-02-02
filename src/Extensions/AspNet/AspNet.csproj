@@ -17,6 +17,8 @@
       <ProjectReference Include="..\MS\MS.csproj" />
       <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
       <ProjectReference Include="..\..\Core\Core.csproj" />
+        <ProjectReference Include="..\..\RegisterMethodsGenerator\RegisterMethodsGenerator\RegisterMethodsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\..\RegisterMethodsGenerator\RegisterMethodsGenerator.Attributes\RegisterMethodsGenerator.Attributes.csproj"/>
     </ItemGroup>
 
 </Project>

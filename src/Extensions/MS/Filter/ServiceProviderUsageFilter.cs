@@ -3,10 +3,12 @@ using System.Reflection;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
 using GhostServiceBuster.MS.Generator;
+using GhostServiceBuster.RegisterMethodsGenerator;
 
 namespace GhostServiceBuster.MS.Filter;
 
-file sealed class ServiceProviderUsageFilter : IRootServiceInfoFilter
+[GenerateRegisterMethodFor]
+internal sealed class ServiceProviderUsageFilter : IRootServiceInfoFilter
 {
     private FrozenSet<Type> TypesResolvedByServiceProvider =>
         field ??= AppDomain.CurrentDomain.GetAssemblies().SelectMany(a =>
@@ -19,16 +21,4 @@ file sealed class ServiceProviderUsageFilter : IRootServiceInfoFilter
 
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfos) =>
         serviceInfos.Where(s => TypesResolvedByServiceProvider.Contains(s.ServiceType));
-}
-
-public static partial class ServiceUsageVerifierExtensions
-{
-    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterServiceProviderUsageRootServicesFilter(
-        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterRootServicesFilter<ServiceProviderUsageFilter>();
-
-    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
-        RegisterServiceProviderUsageRootServicesFilter(
-            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterRootServicesFilter<ServiceProviderUsageFilter>();
 }

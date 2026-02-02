@@ -9,13 +9,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NServiceBus" Version="9.2.7" />
+        <PackageReference Include="NServiceBus" Version="9.2.7"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Abstractions\Abstractions.csproj" />
-      <ProjectReference Include="..\..\Core\Core.csproj" />
-      <ProjectReference Include="..\MS\MS.csproj" />
+        <ProjectReference Include="..\..\Abstractions\Abstractions.csproj"/>
+        <ProjectReference Include="..\..\Core\Core.csproj"/>
+        <ProjectReference Include="..\MS\MS.csproj"/>
+        <ProjectReference Include="..\..\RegisterMethodsGenerator\RegisterMethodsGenerator\RegisterMethodsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\..\RegisterMethodsGenerator\RegisterMethodsGenerator.Attributes\RegisterMethodsGenerator.Attributes.csproj"/>
     </ItemGroup>
 
 </Project>

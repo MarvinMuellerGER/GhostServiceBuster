@@ -1,11 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <TargetFrameworks>net10.0;netstandard2.0</TargetFrameworks>
         <RootNamespace>GhostServiceBuster</RootNamespace>
         <AssemblyName>GhostServiceBuster.Abstractions</AssemblyName>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <Compile Remove="**\*.cs" />
+        <Compile Include="(ServiceUsageVerifier)\IServiceUsageVerifier.cs" />
+        <Compile Include="Detect\IDependencyDetector.cs" />
+        <Compile Include="Extract\IServiceInfoExtractor.cs" />
+        <Compile Include="Filter\IRootServiceInfoFilter.cs" />
+        <Compile Include="Filter\IServiceInfoFilter.cs" />
+    </ItemGroup>
 
 </Project>

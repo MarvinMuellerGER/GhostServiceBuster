@@ -3,13 +3,19 @@ using System.Reflection;
 using GhostServiceBuster.AspNet.Utils;
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
+using GhostServiceBuster.RegisterMethodsGenerator;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.AspNet.Filter;
 
-file sealed class MinimalApiInjectionFilter(IServiceProvider services) : IRootServiceInfoFilter
+/// <summary>
+/// Defines that every service injected into a minimal api endpoint should be treated as a root service.
+/// </summary>
+/// <param name="services">The service provider used to retrieve information about minimal API endpoints.</param>
+[GenerateRegisterMethodFor]
+internal sealed class MinimalApiInjectionFilter(IServiceProvider services) : IRootServiceInfoFilter
 {
     private FrozenSet<Type> TypesInjectedIntoMinimalApi =>
         field ??= services.GetRequiredService<EndpointDataSource>()
@@ -28,16 +34,4 @@ file sealed class MinimalApiInjectionFilter(IServiceProvider services) : IRootSe
 
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfos) =>
         serviceInfos.Where(s => TypesInjectedIntoMinimalApi.Contains(s.ServiceType));
-}
-
-public static partial class ServiceUsageVerifierExtensions
-{
-    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterMinimalApiInjectionRootServicesFilter(
-        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier, IServiceProvider services) =>
-        serviceUsageVerifier.RegisterRootServicesFilter(new MinimalApiInjectionFilter(services));
-
-    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
-        RegisterMinimalApiInjectionRootServicesFilter(
-            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier, IServiceProvider services) =>
-        serviceUsageVerifier.RegisterRootServicesFilter(new MinimalApiInjectionFilter(services));
 }

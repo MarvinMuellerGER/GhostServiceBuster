@@ -1,3 +1,6 @@
-namespace GhostServiceBuster;
-
-public interface IServiceUsageVerifier;
+namespace GhostServiceBuster
+{
+    public interface IServiceUsageVerifier
+    {
+    }
+}
