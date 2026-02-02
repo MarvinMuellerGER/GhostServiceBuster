@@ -1,10 +1,12 @@
 using GhostServiceBuster.Collections;
 using GhostServiceBuster.Filter;
+using GhostServiceBuster.RegisterMethodsGenerator;
 using Microsoft.Extensions.Hosting;
 
 namespace GhostServiceBuster.AspNet.Filter;
 
-file sealed class HostedServiceFilter : IRootServiceInfoFilter
+[GenerateRegisterMethodFor]
+internal sealed class HostedServiceFilter : IRootServiceInfoFilter
 {
     public bool IsIndividual => true;
 
@@ -12,16 +14,4 @@ file sealed class HostedServiceFilter : IRootServiceInfoFilter
 
     public ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfos) =>
         serviceInfos.Where(s => s.ServiceType == typeof(IHostedService));
-}
-
-public static partial class ServiceUsageVerifierExtensions
-{
-    public static IServiceUsageVerifierWithCachedFiltersMutable RegisterHostedServiceRootServicesFilter(
-        this IServiceUsageVerifierWithoutCachesMutable serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterRootServicesFilter<HostedServiceFilter>();
-
-    public static IServiceUsageVerifierWithCachedServicesAndFiltersMutable
-        RegisterHostedServiceRootServicesFilter(
-            this IServiceUsageVerifierWithCachedServicesMutable serviceUsageVerifier) =>
-        serviceUsageVerifier.RegisterRootServicesFilter<HostedServiceFilter>();
 }

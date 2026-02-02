@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>default</LangVersion>
+
+        <RootNamespace>GhostServiceBuster.RegisterMethodsGenerator</RootNamespace>
+        <AssemblyName>GhostServiceBuster.RegisterMethodsGenerator.Attributes</AssemblyName>
+    </PropertyGroup>
+
+</Project>
