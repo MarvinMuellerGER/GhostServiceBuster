@@ -15,7 +15,6 @@
         <RootNamespace>GhostServiceBuster.RegisterMethodsGenerator</RootNamespace>
         <AssemblyName>GhostServiceBuster.RegisterMethodsGenerator</AssemblyName>
         <PackageId>GhostServiceBuster.RegisterMethodsGenerator</PackageId>
-        <Version>0.1.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
