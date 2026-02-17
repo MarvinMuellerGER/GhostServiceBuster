@@ -1,6 +1,6 @@
 namespace GhostServiceBuster.RegisterMethodsGenerator.Candidates;
 
-public enum FilterKind
+internal enum FilterKind
 {
     AllServicesFilter,
     RootServicesFilter,

@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace GhostServiceBuster;
 
 [Generator]
-public class RegisterMethods : IIncrementalGenerator
+internal class RegisterMethods : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {

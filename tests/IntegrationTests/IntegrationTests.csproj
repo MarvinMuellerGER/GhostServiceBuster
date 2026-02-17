@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <RootNamespace>GhostServiceBuster.IntegrationTests</RootNamespace>
         <AssemblyName>GhostServiceBuster.IntegrationTests</AssemblyName>
     </PropertyGroup>
