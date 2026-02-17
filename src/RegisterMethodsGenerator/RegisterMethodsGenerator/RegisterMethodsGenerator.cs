@@ -161,7 +161,7 @@ public class RegisterMethods : IIncrementalGenerator
 
     private static IReadOnlyList<Parameter> GetConstructorParameters(INamedTypeSymbol type) =>
         type.InstanceConstructors.SingleOrDefault()?.Parameters
-            .Select(p => new Parameter(p.Type.ToDisplayString(), p.Name)).ToList() ?? [];
+            .Select(p => new Parameter(p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), p.Name)).ToList() ?? [];
 
     private static FilterKind GetFilterKind(INamedTypeSymbol type)
     {

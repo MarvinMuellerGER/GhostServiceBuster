@@ -14,7 +14,7 @@ internal abstract record Candidate(string NamespaceName, string Name, IReadOnlyL
     private protected string FullName => $"{NamespaceName}.{Name}";
 
     private protected string ParametersCodeInclTypes =>
-        string.Join(", ", Parameters.Select(p => $"global::{p.Type} {p.Name}"));
+        string.Join(", ", Parameters.Select(p => $"{p.Type} {p.Name}"));
 
     private protected string ParametersCodeExclTypes =>
         string.Join(", ", Parameters.Select(p => p.Name));
