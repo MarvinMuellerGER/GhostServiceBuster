@@ -13,6 +13,5 @@
     <Project Path="src/RegisterMethodsGenerator/RegisterMethodsGenerator/RegisterMethodsGenerator.csproj" />
   </Folder>
   <Project Path="src/Abstractions/Abstractions.csproj" />
-  <Project Path="tests/UnitTests/UnitTests.csproj" />
   <Project Path="tests/IntegrationTests/IntegrationTests.csproj" />
 </Solution>
