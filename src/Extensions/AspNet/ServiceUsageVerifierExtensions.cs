@@ -1,4 +1,3 @@
-using GhostServiceBuster.AspNet.Filter;
 using GhostServiceBuster.AspNet.Utils;
 using GhostServiceBuster.MS;
 using Microsoft.AspNetCore.Authorization;

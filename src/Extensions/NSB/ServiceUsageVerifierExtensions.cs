@@ -1,5 +1,4 @@
 using GhostServiceBuster.MS;
-using GhostServiceBuster.NServiceBus.Filter;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostServiceBuster.NServiceBus;
