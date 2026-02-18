@@ -4,12 +4,23 @@ using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Filter
 {
+    /// <summary>
+    /// Defines a filter that can transform a set of services.
+    /// </summary>
     public interface IServiceInfoFilter
     {
 #if NET
-    bool IsIndividual => false;
+        /// <summary>
+        /// Gets whether the filter is applied to individual services.
+        /// </summary>
+        bool IsIndividual => false;
 
-    ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfo);
+        /// <summary>
+        /// Filters the supplied services.
+        /// </summary>
+        /// <param name="serviceInfo">The services to filter.</param>
+        /// <returns>The filtered services.</returns>
+        ServiceInfoSet GetFilteredServices(ServiceInfoSet serviceInfo);
 #endif
     }
 }

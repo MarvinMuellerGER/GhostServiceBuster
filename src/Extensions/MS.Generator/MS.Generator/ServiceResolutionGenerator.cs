@@ -9,8 +9,15 @@ using Microsoft.CodeAnalysis.Text;
 namespace GhostServiceBuster.MS.Generator;
 
 [Generator]
+/// <summary>
+/// Generates assembly attributes for types resolved by a service provider.
+/// </summary>
 public class ServiceResolutionGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// Initializes the incremental generator.
+    /// </summary>
+    /// <param name="context">The generator initialization context.</param>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var invocations = context.SyntaxProvider

@@ -2,13 +2,26 @@ using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster.Detect;
 
+/// <summary>
+/// Detects unused services based on registered dependency detectors.
+/// </summary>
 internal sealed class UnusedServiceDetector : IUnusedServiceDetector
 {
     private readonly List<DependencyDetector> _dependencyDetectors = [];
 
+    /// <summary>
+    /// Registers a dependency detector.
+    /// </summary>
+    /// <param name="dependencyDetector">The detector to register.</param>
     public void RegisterDependencyDetector(DependencyDetector dependencyDetector) =>
         _dependencyDetectors.Add(dependencyDetector);
     
+    /// <summary>
+    /// Finds services that are unused based on root services and dependency detectors.
+    /// </summary>
+    /// <param name="allServices">All known services.</param>
+    /// <param name="rootServices">Root services to start from.</param>
+    /// <returns>The set of unused services.</returns>
     public ServiceInfoSet FindUnusedServices(in ServiceInfoSet allServices, in ServiceInfoSet rootServices)
     {
         var usedServices = rootServices.ToList();

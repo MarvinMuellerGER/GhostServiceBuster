@@ -6,5 +6,9 @@ public partial interface IServiceUsageVerifierWithCachedServicesAndFiltersMutabl
         IServiceUsageVerifierWithCachedFiltersMutable,
         IServiceUsageVerifierWithCachedServicesMutable
 {
+    /// <summary>
+    /// Returns an immutable view of the verifier.
+    /// </summary>
+    /// <returns>The immutable verifier view.</returns>
     new IServiceUsageVerifierWithCachedServicesAndFilters AsImmutable() => this;
 }

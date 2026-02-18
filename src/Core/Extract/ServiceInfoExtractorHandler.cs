@@ -5,10 +5,18 @@ using GhostServiceBuster.Detect;
 
 namespace GhostServiceBuster.Extract;
 
+/// <summary>
+/// Manages registration and selection of service info extractors.
+/// </summary>
 internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
 {
     private readonly Dictionary<Type, ServiceInfoExtractorInternal> _serviceInfoExtractors = [];
 
+    /// <summary>
+    /// Registers a service info extractor for a collection type.
+    /// </summary>
+    /// <typeparam name="TServiceCollection">The service collection type.</typeparam>
+    /// <param name="extractor">The extractor delegate.</param>
     public void RegisterServiceInfoExtractor<TServiceCollection>(ServiceInfoExtractor<TServiceCollection> extractor)
         where TServiceCollection : notnull
     {
@@ -17,6 +25,12 @@ internal sealed class ServiceInfoExtractorHandler : IServiceInfoExtractorHandler
                 $"A service info extractor for {typeof(TServiceCollection).FullName} is already registered.");
     }
 
+    /// <summary>
+    /// Extracts service information from the provided collection.
+    /// </summary>
+    /// <typeparam name="TServiceCollection">The service collection type.</typeparam>
+    /// <param name="serviceCollection">The collection to inspect.</param>
+    /// <returns>The extracted services.</returns>
     public ServiceInfoSet GetServiceInfo<TServiceCollection>(TServiceCollection serviceCollection)
     {
         switch (serviceCollection)

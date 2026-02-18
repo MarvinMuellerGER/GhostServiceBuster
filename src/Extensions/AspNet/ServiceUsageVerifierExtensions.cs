@@ -14,27 +14,57 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace GhostServiceBuster.AspNet;
 
+/// <summary>
+/// Provides extensions for configuring verifiers with ASP.NET Core services.
+/// </summary>
 public static class ServiceUsageVerifierExtensions
 {
     extension<TServiceUsageVerifier>(TServiceUsageVerifier serviceUsageVerifier)
         where TServiceUsageVerifier : IServiceUsageVerifierWithoutCachesMutable
     {
+        /// <summary>
+        /// Configures the verifier for an ASP.NET Core application.
+        /// </summary>
+        /// <param name="app">The web application.</param>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The configured verifier.</returns>
         public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNet(
             WebApplication app, IServiceCollection services) =>
             serviceUsageVerifier.ForAspNet(app.Services, services);
 
+        /// <summary>
+        /// Configures the verifier for an ASP.NET Core service provider and collection.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The configured verifier.</returns>
         public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNet(
             IServiceProvider serviceProvider, IServiceCollection services) =>
             serviceUsageVerifier.ForServiceCollection(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(serviceProvider);
 
+        /// <summary>
+        /// Configures the verifier for an ASP.NET Core application without safety checks.
+        /// </summary>
+        /// <param name="app">The web application.</param>
+        /// <returns>The configured verifier.</returns>
         public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNetUnsafe(WebApplication app) =>
             serviceUsageVerifier.ForAspNetUnsafe(app.Services);
 
+        /// <summary>
+        /// Configures the verifier for an ASP.NET Core service provider without safety checks.
+        /// </summary>
+        /// <param name="services">The service provider.</param>
+        /// <returns>The configured verifier.</returns>
         public IServiceUsageVerifierWithCachedServicesAndFiltersMutable ForAspNetUnsafe(IServiceProvider services) =>
             serviceUsageVerifier.ForServiceProviderUnsafe(services)
                 .RegisterAspNetApplicationEntryPointsAsRootService(services);
 
+        /// <summary>
+        /// Registers common ASP.NET Core entry points as root services.
+        /// </summary>
+        /// <param name="services">The service provider.</param>
+        /// <returns>The configured verifier.</returns>
         public IServiceUsageVerifierWithCachedServicesAndFiltersMutable
             RegisterAspNetApplicationEntryPointsAsRootService(IServiceProvider services) =>
             (IServiceUsageVerifierWithCachedServicesAndFiltersMutable)
