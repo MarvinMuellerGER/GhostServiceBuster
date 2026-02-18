@@ -1,5 +1,6 @@
 namespace GhostServiceBuster;
 
+/// <inheritdoc cref="IServiceUsageVerifier" />
 public partial interface IServiceUsageVerifierWithCachedServicesAndFiltersMutable
     : IServiceUsageVerifierWithCachedServicesAndFilters,
         IServiceUsageVerifierWithCachedFiltersMutable,

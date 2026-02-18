@@ -5,6 +5,9 @@ using GhostServiceBuster.Filter;
 
 namespace GhostServiceBuster.Collections;
 
+/// <summary>
+///     Provides extension methods for <see cref="IEnumerable" /> combined with <see cref="ServiceInfo" />
+/// </summary>
 public static class EnumerableExtensions
 {
     public static ServiceInfoSet ToServiceInfoSet<TServiceInfo>(this IEnumerable<TServiceInfo> enumerable)

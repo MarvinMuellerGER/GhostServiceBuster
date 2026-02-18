@@ -2,6 +2,7 @@ using GhostServiceBuster.Extract;
 
 namespace GhostServiceBuster;
 
+/// <inheritdoc cref="IServiceUsageVerifier" />
 public static partial class ServiceUsageVerifierExtensions
 {
     extension(IServiceUsageVerifierWithCachedFiltersMutable serviceUsageVerifier)

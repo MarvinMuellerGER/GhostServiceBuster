@@ -2,6 +2,7 @@ using GhostServiceBuster.Collections;
 
 namespace GhostServiceBuster;
 
+/// <inheritdoc cref="IServiceUsageVerifier" />
 public interface IServiceUsageVerifierWithCachedFilters
     : IServiceUsageVerifierWithCachedFiltersFluently, IServiceUsageVerifierWithoutCaches
 {
